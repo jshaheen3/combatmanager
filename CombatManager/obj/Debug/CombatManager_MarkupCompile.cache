@@ -1,0 +1,20 @@
+﻿CombatManager
+
+
+winexe
+C#
+.cs
+C:\Users\Warren Powers\Box Sync\Development\CombatManager\combatmanagerpf-code\CombatManager\obj\Debug\
+CombatManager
+none
+false
+DEBUG;TRACE
+C:\Users\Warren Powers\Box Sync\Development\CombatManager\combatmanagerpf-code\CombatManager\App.xaml
+27-1729984392
+14-2003940140
+54-222466226
+26-30363572
+AboutWindow.xaml;AttacksWindow.xaml;CampaignEventWindow.xaml;CombatListWindow.xaml;ConditionSelector.xaml;CustomCombatList.xaml;CustomConditionDialog.xaml;DieRollEditWindow.xaml;ExportDialog.xaml;FeatChangeControl.xaml;FeatChangeWindow.xaml;FeatEditorWindow.xaml;HotKeysDialog.xaml;HPChangeDialog.xaml;MainWindow.xaml;ManualAttacksEditWindow.xaml;MonsterEditorWindow.xaml;NaturalAttackWindow.xaml;NotesPopup.xaml;OGLWindow.xaml;PlayersOrMonstersDialog.xaml;SettingsDialog.xaml;Simple Styles.xaml;SpellEditorWindow.xaml;SpinControl.xaml;SplashScreen.xaml;WeaponSelectWindow.xaml;
+
+False
+

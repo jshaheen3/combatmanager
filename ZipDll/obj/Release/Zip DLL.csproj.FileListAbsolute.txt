@@ -1,0 +1,10 @@
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\ZipDll\bin\Release\IonicZipDll.xml
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\ZipDll\bin\Release\IonicZipDll.dll
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\ZipDll\bin\Release\IonicZipDll.pdb
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\ZipDll\obj\Release\Zip DLL.csprojResolveAssemblyReference.cache
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\ZipDll\obj\Release\Ionic.Zip.Forms.PasswordDialog.resources
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\ZipDll\obj\Release\Ionic.Zip.WinFormsSelfExtractorStub.resources
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\ZipDll\obj\Release\Ionic.Zip.Forms.ZipContentsDialog.resources
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\ZipDll\obj\Release\Zip DLL.csproj.GenerateResource.Cache
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\ZipDll\obj\Release\IonicZipDll.dll
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\ZipDll\obj\Release\IonicZipDll.pdb

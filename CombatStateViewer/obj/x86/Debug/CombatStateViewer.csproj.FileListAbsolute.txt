@@ -1,0 +1,18 @@
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\CombatStateViewer\obj\x86\Debug\CombatStateViewer.csprojResolveAssemblyReference.cache
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\CombatStateViewer\obj\x86\Debug\MainWindow.baml
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\CombatStateViewer\obj\x86\Debug\App.baml
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\CombatStateViewer\obj\x86\Debug\MainWindow.g.cs
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\CombatStateViewer\obj\x86\Debug\App.g.cs
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\CombatStateViewer\obj\x86\Debug\CombatStateViewer_MarkupCompile.cache
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\CombatStateViewer\obj\x86\Debug\CombatStateViewer.g.resources
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\CombatStateViewer\obj\x86\Debug\CombatStateViewer.Properties.Resources.resources
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\CombatStateViewer\obj\x86\Debug\CombatStateViewer.csproj.GenerateResource.Cache
+C:\Users\Warren Powers\Box Sync\Development\CombatManager\combatmanagerpf-code\CombatStateViewer\obj\x86\Debug\CombatStateViewer.csprojResolveAssemblyReference.cache
+C:\Users\Warren Powers\Box Sync\Development\CombatManager\combatmanagerpf-code\CombatStateViewer\obj\x86\Debug\MainWindow.baml
+C:\Users\Warren Powers\Box Sync\Development\CombatManager\combatmanagerpf-code\CombatStateViewer\obj\x86\Debug\App.baml
+C:\Users\Warren Powers\Box Sync\Development\CombatManager\combatmanagerpf-code\CombatStateViewer\obj\x86\Debug\MainWindow.g.cs
+C:\Users\Warren Powers\Box Sync\Development\CombatManager\combatmanagerpf-code\CombatStateViewer\obj\x86\Debug\App.g.cs
+C:\Users\Warren Powers\Box Sync\Development\CombatManager\combatmanagerpf-code\CombatStateViewer\obj\x86\Debug\CombatStateViewer_MarkupCompile.cache
+C:\Users\Warren Powers\Box Sync\Development\CombatManager\combatmanagerpf-code\CombatStateViewer\obj\x86\Debug\CombatStateViewer.g.resources
+C:\Users\Warren Powers\Box Sync\Development\CombatManager\combatmanagerpf-code\CombatStateViewer\obj\x86\Debug\CombatStateViewer.Properties.Resources.resources
+C:\Users\Warren Powers\Box Sync\Development\CombatManager\combatmanagerpf-code\CombatStateViewer\obj\x86\Debug\CombatStateViewer.csproj.GenerateResource.Cache

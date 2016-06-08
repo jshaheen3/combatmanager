@@ -1,0 +1,24 @@
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\PropertyCreator\bin\Debug\WpfApplication1.exe
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\PropertyCreator\bin\Debug\WpfApplication1.pdb
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\PropertyCreator\obj\x86\Debug\PropertyCreator.csprojResolveAssemblyReference.cache
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\PropertyCreator\obj\x86\Debug\MainWindow.baml
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\PropertyCreator\obj\x86\Debug\MainWindow.g.cs
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\PropertyCreator\obj\x86\Debug\App.g.cs
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\PropertyCreator\obj\x86\Debug\WpfApplication1_MarkupCompile.cache
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\PropertyCreator\obj\x86\Debug\WpfApplication1.g.resources
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\PropertyCreator\obj\x86\Debug\PropertyCreator.Properties.Resources.resources
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\PropertyCreator\obj\x86\Debug\PropertyCreator.csproj.GenerateResource.Cache
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\PropertyCreator\obj\x86\Debug\WpfApplication1.exe
+C:\Users\wwpow\Box Sync\Development\CombatManager\combatmanagerpf-code\PropertyCreator\obj\x86\Debug\WpfApplication1.pdb
+C:\Users\Warren Powers\Box Sync\Development\CombatManager\combatmanagerpf-code\PropertyCreator\bin\Debug\WpfApplication1.exe
+C:\Users\Warren Powers\Box Sync\Development\CombatManager\combatmanagerpf-code\PropertyCreator\bin\Debug\WpfApplication1.pdb
+C:\Users\Warren Powers\Box Sync\Development\CombatManager\combatmanagerpf-code\PropertyCreator\obj\x86\Debug\MainWindow.baml
+C:\Users\Warren Powers\Box Sync\Development\CombatManager\combatmanagerpf-code\PropertyCreator\obj\x86\Debug\MainWindow.g.cs
+C:\Users\Warren Powers\Box Sync\Development\CombatManager\combatmanagerpf-code\PropertyCreator\obj\x86\Debug\App.g.cs
+C:\Users\Warren Powers\Box Sync\Development\CombatManager\combatmanagerpf-code\PropertyCreator\obj\x86\Debug\WpfApplication1_MarkupCompile.cache
+C:\Users\Warren Powers\Box Sync\Development\CombatManager\combatmanagerpf-code\PropertyCreator\obj\x86\Debug\WpfApplication1.g.resources
+C:\Users\Warren Powers\Box Sync\Development\CombatManager\combatmanagerpf-code\PropertyCreator\obj\x86\Debug\PropertyCreator.Properties.Resources.resources
+C:\Users\Warren Powers\Box Sync\Development\CombatManager\combatmanagerpf-code\PropertyCreator\obj\x86\Debug\PropertyCreator.csproj.GenerateResource.Cache
+C:\Users\Warren Powers\Box Sync\Development\CombatManager\combatmanagerpf-code\PropertyCreator\obj\x86\Debug\WpfApplication1.exe
+C:\Users\Warren Powers\Box Sync\Development\CombatManager\combatmanagerpf-code\PropertyCreator\obj\x86\Debug\WpfApplication1.pdb
+C:\Users\Warren Powers\Box Sync\Development\CombatManager\combatmanagerpf-code\PropertyCreator\bin\Debug\WpfApplication1.exe.config

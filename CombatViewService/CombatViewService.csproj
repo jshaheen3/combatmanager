@@ -13,7 +13,8 @@
     <ProjectTypeGuids>{3D9AD99F-2412-4246-B90B-4EAA41C64699};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <StartArguments>/client:"WcfTestClient.exe"</StartArguments>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -54,6 +55,10 @@
     <ProjectReference Include="..\CombatManagerCore\CombatManagerCore.csproj">
       <Project>{89CF9A2F-FAE7-46E5-B2CC-FC478D9662FA}</Project>
       <Name>CombatManagerCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CombatManager\CombatManager.csproj">
+      <Project>{37bb3c34-4d03-4b0e-9958-91cb107637e3}</Project>
+      <Name>CombatManager</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
