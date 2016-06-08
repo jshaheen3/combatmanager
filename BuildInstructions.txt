@@ -1,0 +1,8 @@
+Windows build requires Visual Studio 2010
+	Update: Merged into Studio 2015 with VSI Plugin (https://visualstudiogallery.msdn.microsoft.com/f1cc3f3e-c300-40a7-8797-c509fb8933b9)
+Build 32-bit and 64-bit SQLite DLLs using Build > Batch Build
+Build CombatManager project
+iPad build requires MonoDevelop and Montouch
+
+
+see: http://sourceforge.net/p/combatmanagerpf/wiki/BuildInstuctions/
