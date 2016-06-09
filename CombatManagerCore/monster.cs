@@ -32,6 +32,7 @@ using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Xml.Linq;
+using System.Xml.XPath;
 
 using Ionic.Zip;
 using System.Threading.Tasks;
@@ -1261,71 +1262,47 @@ namespace CombatManager {
         private static List<Monster> FromHeroLabFile(XDocument doc) {
             List<Monster> monsters = new List<Monster>();
 
-
             //attempt to get the stats block
             foreach (XElement heroElement in doc.Root.Element("portfolio").Elements("hero")) {
-
-
-
                 Monster monster = new Monster();
-
                 monster.Name = heroElement.Attribute("heroname").Value;
-
 
                 XElement statblock = heroElement.Element("statblock");
 
                 if (statblock != null) {
                     string statsblock = statblock.Value;
-
                     ImportHeroLabBlock(statsblock, monster);
-
                     monsters.Add(monster);
                 }
-
-
-
-
             }
-
             return monsters;
-
-        }
+        }//end FromHeroLabFile()
 
         private static List<Monster> FromHeroLabZip(string filename) {
-
             List<Monster> monsters = new List<Monster>();
-
             ZipFile f = ZipFile.Read(filename);
-
 
             foreach (var en in from v in f.Entries where v.FileName.StartsWith("statblocks_text") && !v.IsDirectory select v) {
 #if MONO
-
-                using (StreamReader r = new StreamReader(en.OpenReader(), Encoding.GetEncoding("utf-8")))
-                {
+                using (StreamReader r = new StreamReader(en.OpenReader(), Encoding.GetEncoding("utf-8"))) {
 #else
                 using (StreamReader r = new StreamReader(en.OpenReader(), Encoding.GetEncoding("windows-1252"))) {
 #endif
                     String block = r.ReadToEnd();
-
                     var otheren = f.Entries.FirstOrDefault(v => v.FileName.Equals(en.FileName.Replace("statblocks_text", "statblocks_xml").Replace(".txt", ".xml")));
-
                     XDocument doc = null;
 
                     if (otheren != null) {
                         doc = XDocument.Load(new StreamReader(otheren.OpenReader()));
                     }
 
-
                     Monster monster = new Monster();
                     ImportHeroLabBlock(block, doc, monster, true);
                     monsters.Add(monster);
-
                 }
             }
-
             return monsters;
-        }
+        } //end FromHeroLabZip(string)
 
         private static List<Monster> FromPCGenExportFile(XDocument doc) {
             List<Monster> monsters = new List<Monster>();
@@ -1655,265 +1632,235 @@ namespace CombatManager {
         }
 
         private static void ImportHeroLabBlock(string statsblock, XDocument doc, Monster monster, bool readNameBlock = false) {
+            string[] attributes = { "Strength", "Dexterity", "Constitution", "Intelligence", "Wisdom", "Charisma" };
+            int count = 0;
+            string temp;
+            IEnumerable<XElement> attrs = null;
+            XElement el1 = doc.Element("document").Element("public").Element("character");
+            Match m = null; //Some blocks are not pulled from HL xml. For this we need to run regex against the txt file.
+
             statsblock = statsblock.Replace('×', 'x');
             statsblock = statsblock.Replace("Ã—", "x");
             statsblock = statsblock.Replace("\n", "\r\n");
             statsblock = statsblock.Replace("\r\r\n", "\r\n");
+            statsblock = statsblock.Replace("\r\n  ", ""); //This should concatenate the spells section into one line. This would make it easer to pull it in.
 
+            //Name
+            monster.Name = el1.Attribute("name").Value;
 
-            if (readNameBlock) {
-
-                String name = "";
-
-                Regex nameRegex = new Regex("(--------------------\r\n)?(?<name>.+?)(\t| +)CR");
-                Match sm = nameRegex.Match(statsblock);
-                if (sm.Success) {
-                    name = sm.Groups["name"].Value;
-                } else {
-                    StringReader reader = new StringReader(statsblock);
-                    name = reader.ReadLine();
-                    int loc = name.IndexOf('\t');
-                    if (loc != -1) {
-                        name = name.Substring(0, loc);
+            //Ability Scores
+            foreach (string a in attributes) {
+                attrs = el1.XPathSelectElements("attributes/attribute[@name='" + a + "']");
+                foreach (XElement attr in attrs) {
+                    if (count > 0) {
+                        monster.AbilitiyScores += ", ";
                     }
+                    monster.AbilitiyScores += a.Substring(0, 3) + " " + attr.Element("attrvalue").Attribute("base").Value;
                 }
-
-
-                monster.Name = name;
+                attrs = null;
+                count++;
             }
 
+            //Challenge Rating
+            monster.CR = el1.Element("challengerating").Attribute("text").Value.Substring(0, 3);
 
-            //System.Diagnostics.Debug.WriteLine(statsblock);
+            //XP
+            monster.XP = el1.Element("xpaward").Attribute("value").Value;
 
+            //Size
+            monster.Size = el1.Element("size").Attribute("name").Value;
 
-            String strStatSeparator = ",[ ]+";
-
-            //get stats
-            string statsRegStr = HeroLabStatRegexString("Str") + strStatSeparator +
-                 HeroLabStatRegexString("Dex") + strStatSeparator +
-                  HeroLabStatRegexString("Con") + strStatSeparator +
-                   HeroLabStatRegexString("Int") + strStatSeparator +
-                    HeroLabStatRegexString("Wis") + strStatSeparator +
-                     HeroLabStatRegexString("Cha");
-
-
-            Regex regStats = new Regex(statsRegStr);
-
-
-
-            Match m = regStats.Match(statsblock);
-            if (m.Success) {
-                monster.AbilitiyScores = "Str " + m.Groups["str"].Value +
-                                         ", Dex " + m.Groups["dex"].Value +
-                                         ", Con " + m.Groups["con"].Value +
-                                         ", Int " + m.Groups["int"].Value +
-                                         ", Wis " + m.Groups["wis"].Value +
-                                         ", Cha " + m.Groups["cha"].Value;
-            } else {
-                string StatCollection = "";
-                const string RegstatsRegStrength = ("Str ([0-9]+/)?(?<str>([0-9]+|-))");
-                const string RegstatsRegDexterity = ("Dex ([0-9]+/)?(?<dex>([0-9]+|-))");
-                const string RegstatsRegConstitution = ("Con ([0-9]+/)?(?<con>([0-9]+|-))");
-                const string RegstatsRegIntelligence = ("Int ([0-9]+/)?(?<int>([0-9]+|-))");
-                const string RegstatsRegWisdom = ("Wis ([0-9]+/)?(?<wis>([0-9]+|-))");
-                const string RegstatsRegCharisma = ("Cha ([0-9]+/)?(?<cha>([0-9]+|-))");
-
-                regStats = new Regex(RegstatsRegStrength);
-                Match regexMatchStr = regStats.Match(statsblock);
-                StatCollection = regexMatchStr.Success ? "Str " + regexMatchStr.Groups["str"].Value : "Str -";
-
-                regStats = new Regex(RegstatsRegDexterity);
-                Match regexMatchDex = regStats.Match(statsblock);
-                StatCollection = StatCollection + (regexMatchDex.Success ? ", Dex " + regexMatchDex.Groups["dex"].Value : ", Dex -");
-
-                regStats = new Regex(RegstatsRegConstitution);
-                Match regexMatchCon = regStats.Match(statsblock);
-                StatCollection = StatCollection + (regexMatchCon.Success ? ", Con " + regexMatchCon.Groups["con"].Value : ", Con -");
-
-                regStats = new Regex(RegstatsRegIntelligence);
-                Match regexMatchInt = regStats.Match(statsblock);
-                StatCollection = StatCollection + (regexMatchInt.Success ? ", Int " + regexMatchInt.Groups["int"].Value : ", Int -");
-
-                regStats = new Regex(RegstatsRegWisdom);
-                Match regexMatchWis = regStats.Match(statsblock);
-                StatCollection = StatCollection + (regexMatchWis.Success ? ", Wis " + regexMatchWis.Groups["wis"].Value : ", Wis -");
-
-                regStats = new Regex(RegstatsRegCharisma);
-                Match regexMatchCha = regStats.Match(statsblock);
-                StatCollection = StatCollection + (regexMatchCha.Success ? ", Cha " + regexMatchCha.Groups["cha"].Value : ", Cha -");
-
-                monster.AbilitiyScores = StatCollection;
-
-            }
-
-            Regex regCR = new Regex("CR (?<cr>[0-9]+(/[0-9]+)?)\r\n");
-            m = regCR.Match(statsblock);
-            if (m.Success) {
-                monster.CR = m.Groups["cr"].Value;
-
-                monster.XP = GetCRValue(monster.CR).ToString();
-            } else if (doc != null) {
-                XElement el = doc.Element("document").Element("public").Element("character");
-                XElement cr = el.Element("challengerating");
-                String crText = cr.Attribute("text").Value;
-                monster.CR = crText.Substring(3);
-                XElement xp = el.Element("xpaward");
-                monster.XP = xp.Attribute("value").Value;
-            } else {
-                monster.CR = "0";
-                monster.xp = "0";
-            }
-
-
-
-            //CN Medium Humanoid (Orc)
-            string sizesText = SizesString;
-
-            string typesText = TypesString;
-
-
-
-            Regex regeAlSizeType = new Regex("(?<align>" + AlignString + ") (?<size>" + sizesText +
-                ") (?<type>" + typesText + ") *(\\(|\r\n)");
-            m = regeAlSizeType.Match(statsblock);
-
-            if (m.Success) {
-                monster.Alignment = m.Groups["align"].Value;
-                if (monster.Alignment == "NN") {
+            //Alignment
+            switch (el1.Element("alignment").Attribute("name").Value) {
+                case "Chaotic Good":
+                    monster.Alignment = "CG";
+                    break;
+                case "Neutral Good":
+                    monster.Alignment = "NG";
+                    break;
+                case "Lawful Good":
+                    monster.Alignment = "LG";
+                    break;
+                case "Chaotic Neutral":
+                    monster.Alignment = "CN";
+                    break;
+                case "Neutral":
                     monster.Alignment = "N";
-                }
-                monster.Size = m.Groups["size"].Value;
-                monster.Type = m.Groups["type"].Value.ToLower();
-            } else {
-                monster.Alignment = "N";
-                monster.Size = "Medium";
-                monster.Type = "humanoid";
+                    break;
+                case "Lawful Neutral":
+                    monster.Alignment = "LN";
+                    break;
+                case "Chaotic Evil":
+                    monster.Alignment = "CE";
+                    break;
+                case "Neutral Evil":
+                    monster.Alignment = "NE";
+                    break;
+                case "Lawful Evil":
+                    monster.Alignment = "LE";
+                    break;
+                default:
+                    monster.Alignment = "N";
+                    break;
             }
 
+            //Type
+            monster.Type = el1.Element("types").Element("type").Attribute("name").Value;
 
-            string[] lines = statsblock.Split(new string[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+            //Gender
+            monster.Gender = el1.Element("personal").Attribute("gender").Value;
 
-            string raceClass = GetLine("Male", statsblock, true);
-            if (raceClass == null) {
-                raceClass = GetLine("Female", statsblock, true);
-                if (raceClass != null) {
-                    monster.Gender = "Female";
-                } else {
-                    raceClass = lines[1];
+            //Race
+            monster.Race = el1.Element("race").Attribute("name").Value;
+
+            //Classes
+            monster.Class = el1.Element("classes").Attribute("summary").Value;
+
+            //Initiative
+            monster.Init = Int32.Parse(el1.Element("initiative").Attribute("total").Value.Substring(1));
+            // TODO: Handling dual initiative
+
+            //Senses
+            monster.Senses = "";
+            attrs = el1.XPathSelectElements("senses/special");
+            count = 0;
+            foreach (XElement attr in attrs) {
+                if (count > 0) {
+                    monster.Senses += ",";
                 }
-            } else {
-                monster.Gender = "Male";
+                monster.Senses += attr.Attribute("shortname").Value;
+                count++;
             }
+            attrs = null;
+            monster.Senses += "; Perception " + el1.XPathSelectElement("skills/skill[@name='Perception']").Attribute("value").Value;
 
-            if (raceClass != null) {
-                m = Regex.Match(raceClass, "(?<race>[-\\p{L}]+) (?<class>.+)?");
 
-                if (m.Success) {
-                    monster.Race = m.Groups["race"].Value;
-                    if (m.Groups["class"].Success) {
-                        monster.Class = m.Groups["class"].Value;
+            //AC Mods and AC
+            count = 0;
+            foreach (var attribute in el1.Element("armorclass").Attributes()) {
+                if (attribute.Value != "") {
+                    switch (attribute.Name.ToString()) {
+                        case "fromarmor":
+                            temp = attribute.Value + " armor";
+                            break;
+                        case "fromshield":
+                            temp = attribute.Value + " shield";
+                            break;
+                        case "fromdexterity":
+                            temp = attribute.Value + " dex";
+                            break;
+                        case "fromwisdom":
+                            temp = attribute.Value + " wis";
+                            break;
+                        case "fromnatural":
+                            temp = attribute.Value + " natural";
+                            break;
+                        case "fromdeflect":
+                            temp = attribute.Value + " deflection";
+                            break;
+                        case "fromdodge":
+                            temp = attribute.Value + " dodge";
+                            break;
+                        case "frommisc":
+                            temp = attribute.Value + " misc";
+                            break;
+                        default:
+                            temp = null;
+                            break;
+                    }
+                    if (temp != null) {
+                        if (count > 0) {
+                            monster.AC_Mods += ", ";
+                        }
+                        monster.AC_Mods += temp;
+                        //only increment if we found a value
+                        count++;
                     }
                 }
-
+                temp = null;
             }
 
+            monster.AC = el1.Element("armorclass").Attribute("ac").Value;
 
+            //HP and Hit Dice
+            monster.HP = Int32.Parse(el1.Element("health").Attribute("hitpoints").Value);
+            monster.HD = el1.Element("health").Attribute("hitdice").Value;
 
-            //init, senses, perception
-
-            //Init +7; Senses Darkvision (60 feet); Perception +2
-            Regex regSense = new Regex("Init (?<init>(\\+|-)[0-9]+)(/(?<dualinit>(\\+|-)[0-9]+), dual initiative)?(; Senses )((?<senses>.+)(;|,) )?Perception (?<perception>(\\+|-)[0-9]+)");
-            m = regSense.Match(statsblock);
-
-            if (m.Groups["init"].Success) {
-                monster.Init = int.Parse(m.Groups["init"].Value);
-            } else {
-                monster.Init = 0;
-            }
-            if (m.Groups["dualinit"].Success) {
-                monster.DualInit = int.Parse(m.Groups["dualinit"].Value);
-            } else {
-                monster.DualInit = null;
-            }
-            monster.Senses = "";
-            if (m.Groups["senses"].Success) {
-                monster.Senses += m.Groups["senses"].Value + "; ";
-            }
-            int perception = 0;
-
-            if (m.Groups["perception"].Success) {
-                perception = int.Parse(m.Groups["perception"].Value);
-            }
-
-            monster.Senses += "Perception " + CMStringUtilities.PlusFormatNumber(perception);
-
-            Regex regArmor = new Regex("(?<ac>AC -?[0-9]+, touch -?[0-9]+, flat-footed -?[0-9]+) +(?<mods>\\([-\\p{L}0-9, +]+\\))?", RegexOptions.IgnoreCase);
-            m = regArmor.Match(statsblock);
-            monster.AC = m.Groups["ac"].Value;
-            if (m.Groups["mods"].Success) {
-                monster.AC_Mods = m.Groups["mods"].Value;
-            } else {
-                monster.AC_Mods = "";
-            }
-
-
-            Regex regHP = new Regex("hp (?<hp>[0-9]+) ((?<hd>\\([-+0-9d]+\\))|(\\(\\)))");
-            m = regHP.Match(statsblock);
-            if (m.Groups["hp"].Success) {
-                monster.HP = int.Parse(m.Groups["hp"].Value);
-            } else {
-                monster.HP = 0;
-            }
-            if (m.Groups["hd"].Success) {
-                monster.HD = m.Groups["hd"].Value;
-            } else {
-                monster.HD = "0d0";
-            }
-
-            Regex regSave = new Regex("Fort (?<fort>[-+0-9]+)( \\([-+0-9]+bonus vs. [- \\p{L}]+\\))?, Ref (?<ref>[-+0-9]+), Will (?<will>[-+0-9]+)");
-            m = regSave.Match(statsblock);
-            if (m.Success) {
-                monster.Fort = int.Parse(m.Groups["fort"].Value);
-                monster.Ref = int.Parse(m.Groups["ref"].Value);
-                monster.Will = int.Parse(m.Groups["will"].Value);
-            } else {
-                monster.Fort = 0;
-                monster.Ref = 0;
-                monster.Will = 0;
-            }
-
-            int defStart = m.Index + m.Length;
-
-            Regex endLine = new Regex("(?<line>.+)");
-            m = endLine.Match(statsblock, defStart + 1);
-            String defLine = m.Value;
-
-            //string da = FixHeroLabDefensiveAbilities(GetLine("Defensive Abilities", statsblock, true));
-            monster.DefensiveAbilities = GetItem("Defensive Abilities", defLine, true);
-            monster.Resist = GetItem("Resist", defLine, false);
-            monster.Immune = GetItem("Immune", defLine, false);
-            monster.SR = GetItem("SR", defLine, false);
-
-            /*Regex regResist = new Regex("(?<da>.+); Resist (?<resist>.+)");
-
-            if (da != null)
-            {
-                m = regResist.Match(da);
-
-                if (m.Success)
-                {
-                    monster.DefensiveAbilities = m.Groups["da"].Value;
-                    monster.Resist = m.Groups["resist"].Value;
+            //Saves
+            attrs = el1.XPathSelectElements("saves/save");
+            foreach (var attr in attrs) {
+                switch (attr.Attribute("abbr").Value.ToString()) {
+                    case "Fort":
+                        monster.Fort = Int32.Parse(attr.Attribute("save").Value.Substring(1));
+                        break;
+                    case "Ref":
+                        monster.Ref = Int32.Parse(attr.Attribute("save").Value.Substring(1));
+                        break;
+                    case "Will":
+                        monster.Will = Int32.Parse(attr.Attribute("save").Value.Substring(1));
+                        break;
+                    default:
+                        //Not fond of this. This will break good saves if one is bad 
+                        // TODO: find a better way
+                        monster.Fort = 0;
+                        monster.Ref = 0;
+                        monster.Will = 0;
+                        break;
                 }
-                else
-                {
-                    monster.DefensiveAbilities = da;
+            }
+            attrs = null;
+
+            //Defenses, Resists, Immunities, SR, etc.
+            count = 0;
+            attrs = el1.XPathSelectElements("defensive/special");
+            foreach (var attr in attrs) {
+                if (count > 0) {
+                    monster.DefensiveAbilities += "; ";
                 }
-            }*/
+                monster.DefensiveAbilities += attr.Attribute("shortname").Value;
+                count++;
+            }
+            attrs = null;
 
-            monster.Weaknesses = GetLine("Weakness", statsblock, false);
+            count = 0;
+            attrs = el1.XPathSelectElements("resistances/special");
+            foreach (var attr in attrs) {
+                if (attr.Attribute("name").Value.StartsWith("Spell Resistance")) {
+                    //SR is stored under resistances. This pulls it out but skips the loop to ensure we don't alter the resistance line format
+                    monster.SR = attr.Attribute("shortname").Value.Substring(attr.Attribute("shortname").Value.Length - 2); ;
+                    continue;
+                }
+                if (count > 0) {
+                    monster.Resist += "; ";
+                }
+                monster.Resist += attr.Attribute("shortname").Value;
+                count++;
+            }
+            attrs = null;
 
+            count = 0;
+            attrs = el1.XPathSelectElements("immunities/special");
+            foreach (var attr in attrs) {
+                if (count > 0) {
+                    monster.Immune += "; ";
+                }
+                monster.Immune += attr.Attribute("shortname").Value;
+                count++;
+            }
+            attrs = null;
 
+            count = 0;
+            attrs = el1.XPathSelectElements("weaknesses/special");
+            foreach (var attr in attrs) {
+                if (count > 0) {
+                    monster.Weaknesses += "; ";
+                }
+                monster.Weaknesses += attr.Attribute("shortname").Value;
+                count++;
+            }
+            attrs = null;
+
+            //Speed
             monster.Speed = GetLine("Spd", statsblock, false);
             if (monster.Speed == null) {
 
@@ -1923,18 +1870,9 @@ namespace CombatManager {
 
             monster.SpecialAttacks = GetLine("Special Attacks", statsblock, true);
 
-            Regex regBase = new Regex("Base Atk (?<bab>[-+0-9]+); CMB (?<cmb>[^;]+); CMD (?<cmd>.+)");
-            m = regBase.Match(statsblock);
-
-            if (m.Success) {
-                monster.BaseAtk = int.Parse(m.Groups["bab"].Value);
-                monster.CMB = m.Groups["cmb"].Value;
-                monster.CMD = m.Groups["cmd"].Value;
-            } else {
-                monster.BaseAtk = 0;
-                monster.CMB = "+0";
-                monster.CMD = "10";
-            }
+            monster.CMB = el1.Element("maneuvers").Attribute("cmb").Value;
+            monster.CMD = el1.Element("maneuvers").Attribute("cmd").Value;
+            monster.BaseAtk = Int32.Parse(el1.Element("attack").Attribute("baseattack").Value.Substring(1));
 
             monster.Feats = FixHeroLabFeats(GetLine("Feats", statsblock, true));
 
@@ -1950,94 +1888,49 @@ namespace CombatManager {
             if (monster.Gear == null) {
                 monster.Gear = GetLine("Combat Gear", statsblock, true);
             }
-            string space = GetLine("Space", statsblock, true);
-            if (space != null) {
-                m = Regex.Match(space, "(?<space>[0-9]+ ?ft\\.)[;,] +Reach +(?<reach>[0-9]+ ?ft\\.)");
-                if (m.Success) {
-                    monster.Space = m.Groups["space"].Value;
-                    monster.Reach = m.Groups["reach"].Value;
-                }
-            }
 
+            monster.Space = el1.Element("size").Element("space").Attribute("value").Value;
+            monster.Reach = el1.Element("size").Element("space").Attribute("reach").Value;
 
+            count = 0;
+            attrs = el1.XPathSelectElements("//special[@type]"); //this should retreive all nodes called special with a type attribute
+            Regex regWeaponTraining = new Regex("Weapon Training: (?<group>[\\p{L}]+) \\+(?<value>[0-9]+)");
+            foreach (var attr in attrs) {
+                SpecialAbility sa = new SpecialAbility();
 
+                if (attr.Attribute("name").Value.StartsWith("Weapon Training")) {
+                    sa.Name = attr.Attribute("name").Value; //the shortname value for weapon training doesn't fit the special ability sections
+                    Match lm = regWeaponTraining.Match(attr.Attribute("name").Value);
 
-            Regex regLine = new Regex("(?<text>.+)\r\n");
-
-            Regex regSpecial = new Regex("(SPECIAL ABILITIES|Special Abilities)\r\n(-+)\r\n(?<special>(.|\r|\n)+)((Created With Hero Lab)|(Hero Lab))");
-            m = regSpecial.Match(statsblock);
-            if (m.Success) {
-                string special = m.Groups["special"].Value;
-
-                //parse special string
-                //fix template text
-                special = Regex.Replace(special, "Granted by [- \\p{L}]+ heritage\\.\r\n\r\n", "");
-
-                MatchCollection matches = regLine.Matches(special);
-
-                Regex regWeaponTraining = new Regex("Weapon Training: (?<group>[\\p{L}]+) \\+(?<value>[0-9]+)");
-                Regex regSR = new Regex("Spell Resistance \\((?<SR>[0-9]+)\\)");
-                Regex regSpecialAbility = new Regex("(?<name>[-\\.+, \\p{L}0-9:]+)"
-                    + "( \\((?<mod>[-+][0-9]+)\\))?"
-                    + "( [0-9]+')?"
-                    + "( \\(CMB (?<CMB>[0-9]+)\\))?"
-                    + "( \\((?<AtWill>At will)\\))?"
-                    + "( \\((?<daily>[0-9]+)/day\\))?"
-                    + "( \\(DC (?<DC>[0-9]+)\\))?"
-                    + "( \\((?<othertext>[0-9\\p{L}, /]+)\\))?"
-                    + " \\((?<type>(Ex|Su|Sp)(, (?<cp>[0-9]+) CP)?)\\) (?<text>.+)");
-
-                foreach (Match ma in matches) {
-                    string text = ma.Groups["text"].Value;
-
-                    //check for weapon training
-                    Match lm = regWeaponTraining.Match(text);
-
-                    if (lm.Success) {
+                    if (lm.Success) { //seperates the group assigned to the weapon training and it's bonus
                         string group = lm.Groups["group"].Value;
                         int val = int.Parse(lm.Groups["value"].Value);
 
                         monster.AddWeaponTraining(group, val);
                     }
-                    if (!lm.Success) {
-                        lm = regSR.Match(text);
-
-                        if (lm.Success) {
-                            monster.SR = lm.Groups["SR"].Value;
-
-                        }
-                    }
-                    if (!lm.Success) {
-                        lm = regSpecialAbility.Match(text);
-
-                        if (lm.Success) {
-                            SpecialAbility sa = new SpecialAbility();
-                            sa.Name = lm.Groups["name"].Value;
-                            sa.Type = lm.Groups["type"].Value;
-                            sa.Text = lm.Groups["text"].Value;
-
-                            if (lm.Groups["AtWill"].Success) {
-                                sa.Text += " (at will)";
-                            } else if (lm.Groups["Daily"].Success) {
-                                sa.Text += " (" + lm.Groups["Daily"].Value + "/day)";
-                            }
-
-                            if (lm.Groups["DC"].Success) {
-                                sa.Text += " (DC " + lm.Groups["DC"].Value + ")";
-                            }
-
-
-                            monster.SpecialAbilitiesList.Add(sa);
-
-                        } else {
-                            System.Diagnostics.Debug.WriteLine(text);
-                        }
-
-                    }
-
-
+                } else {
+                    sa.Name = attr.Attribute("shortname").Value;
                 }
+
+                switch (attr.Attribute("type").Value) {
+                    case "Supernatural Ability":
+                        sa.Type = "Su";
+                        break;
+                    case "Extraordinary Ability":
+                        sa.Type = "Ex";
+                        break;
+                    case "Spell-Like Ability":
+                        sa.Type = "Sp";
+                        break;
+                    default:
+                        sa.Type = "Su";
+                        break;
+                }
+                sa.Text = attr.Element("description").Value;
+
+                monster.SpecialAbilitiesList.Add(sa);
             }
+            attrs = null;
 
             string endAttacks = "[\\p{L}()]+ Spells (Known|Prepared)|Special Attacks|[ \\p{L}()]+Spell-Like Abilities|-------|Space [0-9]";
 
@@ -2047,59 +1940,84 @@ namespace CombatManager {
 
             if (m.Success) {
                 string attacks = m.Groups["melee"].Value;
-
                 monster.Melee = FixHeroLabAttackString(attacks);
-
             }
 
-            Regex regRanged = new Regex(
-                "\r\nRanged (?<ranged>(.|\r|\n)+?)\r\n(" + endAttacks + ")");
+            Regex regRanged = new Regex("\r\nRanged (?<ranged>(.|\r|\n)+?)\r\n(" + endAttacks + ")");
 
             m = regRanged.Match(statsblock);
 
             if (m.Success) {
                 string attacks = m.Groups["ranged"].Value;
-
                 monster.Ranged = FixHeroLabAttackString(attacks);
             }
 
-            monster.SpellLikeAbilities = GetLine("Spell-Like Abilities", statsblock, false);
-            if (monster.SpellLikeAbilities != null) {
-                monster.SpellLikeAbilities = monster.SpellLikeAbilities.Replace((char)65533, ' ');
+            /* I'm removing this block of code as it may no longer be needed. This is too complex and doesn't include DC's. 
+             * I instead format the statsblock at the start of this function and simply pull the line using regex.
+            count = 0;
+            int nextCount = 0;
+            int spellFrequency = 0;
+            isFinished = false;
+            Regex spFrequency = new Regex("\\(([^)]+)\\)"); //this should seperate the string in parenthesis. HL stores the frequency of a spell like in parenthesis. Ex: Create Water (2/day)
+            var strSpells = new List<String>();
+            attrs = null;
+            attrs = el1.XPathSelectElements("spelllike/special");
+            if (attrs != null) {
+                monster.SpellLikeAbilities = GetLine("Spell-Like Abilities", origStatsblock, false) + " "; //CL and concentration doesn't seem to be stored in XML. I have to pull from stats block.
+                while (!isFinished) {
+                    foreach (var attr in attrs) {
+                        m = spFrequency.Match(attr.Attribute("name").Value);
+                        if (m.Success) {
+                            // this if block adds each spell like ability to a list to be formatted and added to the monster. 
+                            // we sequentially search the spells and pull out each spell level from at will then up. 
+                            if (m.Value == "At Will" && count == 0) {
+                                strSpells.Add(attr.Attribute("shortname").Value); 
+                            } else {
+                                spellFrequency = Int32.Parse(m.Value.Substring(0, m.Value.IndexOf("/")));
+                                if (spellFrequency == count) {
+                                    strSpells.Add(attr.Attribute("shortname").Value);
+                                } else { //we increment the next spell level to look for if we find a spell with level 1 greater than our current level
+                                    nextCount = (spellFrequency == (count + 1)) ? spellFrequency : nextCount;
+                                }
+                            }
+                        }
+                    }
+                    strSpells.Sort();
+                    isFinished = (count == nextCount) ? true : false;
+                    count++;
+                }
             }
+            //this block is abysmmal. We loop the data several times until we get it organized properly.There has to be a better way
+            //this is also untested and possibly unfinished. 
+            // TODO: Should be removed
+            */
 
-            Regex regSpells = new Regex(
-                "\r\n[ \\p{L}()]+ (?<spells>Spells Known (.|\r|\n)+?)\r\n------");
+            monster.SpellLikeAbilities = FixSpellString(GetLine("Spell-Like Abilities", statsblock, false));
+
+            //Regex regSpells = new Regex("\r\n[ \\p{L}()]+ (?<spells>Spells Known (.|\r|\n)+?)\r\n------"); //this is the old method of obtaining spells
+            Regex regSpells = new Regex("^.* Spells Known.*$");
 
             m = regSpells.Match(statsblock);
             if (m.Success) {
-                string spells = m.Groups["spells"].Value;
-
-                spells = FixSpellString(spells);
-
-                monster.SpellsKnown = spells;
+                monster.SpellsKnown = FixSpellString(m.Value);
             }
 
-            Regex regSpellsPrepared = new Regex(
-                "\r\n[ \\p{L}()]+ (?<spells>Spells Prepared (.|\r|\n)+?)\r\n------");
+            //Regex regSpellsPrepared = new Regex("\r\n[ \\p{L}()]+ (?<spells>Spells Prepared (.|\r|\n)+?)\r\n------");
+            Regex regSpellsPrepared = new Regex("^.*Spells Prepared.*$");
 
             m = regSpellsPrepared.Match(statsblock);
             if (m.Success) {
-                string spells = m.Groups["spells"].Value;
-
-                spells = FixSpellString(spells);
-
-                monster.SpellsPrepared = spells;
-
+                monster.SpellsPrepared = FixSpellString(m.Value);
             }
 
-        }
+        }//end ImportHeroLabBlock()
 
         private static string FixSpellString(string spells) {
 
             spells = spells.Replace('—', '-');
             spells = spells.Replace("):", ")");
             spells = spells.Replace("\r\n", " ");
+            spells = spells.Replace((char)65533, ' ');
 
             return spells;
 
