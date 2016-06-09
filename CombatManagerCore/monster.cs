@@ -1662,7 +1662,7 @@ namespace CombatManager {
             }
 
             //Challenge Rating
-            monster.CR = el1.Element("challengerating").Attribute("text").Value.Substring(0, 3);
+            monster.CR = el1.Element("challengerating").Attribute("value").Value;
 
             //XP
             monster.XP = el1.Element("xpaward").Attribute("value").Value;
@@ -1707,6 +1707,22 @@ namespace CombatManager {
             //Type
             monster.Type = el1.Element("types").Element("type").Attribute("name").Value;
 
+            //Subtypes
+            count = 0;
+            attrs = el1.XPathSelectElements("subtypes/subtype");
+            foreach (XElement attr in attrs) {
+                if (count == 0) {
+                    monster.SubType = "(" + attr.Attribute("name").Value;
+                } else {
+                    monster.SubType += ", " + attr.Attribute("name").Value;
+                }
+                count++;
+            }
+            if (monster.SubType != null) {
+                monster.SubType += ")";
+            }
+            attrs = null;
+
             //Gender
             monster.Gender = el1.Element("personal").Attribute("gender").Value;
 
@@ -1714,7 +1730,9 @@ namespace CombatManager {
             monster.Race = el1.Element("race").Attribute("name").Value;
 
             //Classes
-            monster.Class = el1.Element("classes").Attribute("summary").Value;
+            try {
+                monster.Class = el1.Element("classes").Attribute("summary").Value;
+            } catch (NullReferenceException e) { }
 
             //Initiative
             monster.Init = Int32.Parse(el1.Element("initiative").Attribute("total").Value.Substring(1));
@@ -1726,13 +1744,13 @@ namespace CombatManager {
             count = 0;
             foreach (XElement attr in attrs) {
                 if (count > 0) {
-                    monster.Senses += ",";
+                    monster.Senses += ", ";
                 }
                 monster.Senses += attr.Attribute("shortname").Value;
                 count++;
             }
             attrs = null;
-            monster.Senses += "; Perception " + el1.XPathSelectElement("skills/skill[@name='Perception']").Attribute("value").Value;
+            monster.Senses += "; Perception +" + el1.XPathSelectElement("skills/skill[@name='Perception']").Attribute("value").Value;
 
 
             //AC Mods and AC
@@ -1764,6 +1782,9 @@ namespace CombatManager {
                         case "frommisc":
                             temp = attribute.Value + " misc";
                             break;
+                        case "fromsize":
+                            temp = attribute.Value + " size";
+                            break;
                         default:
                             temp = null;
                             break;
@@ -1771,7 +1792,7 @@ namespace CombatManager {
                     if (temp != null) {
                         if (count > 0) {
                             monster.AC_Mods += ", ";
-                        }
+                        } 
                         monster.AC_Mods += temp;
                         //only increment if we found a value
                         count++;
@@ -1779,12 +1800,15 @@ namespace CombatManager {
                 }
                 temp = null;
             }
-
-            monster.AC = el1.Element("armorclass").Attribute("ac").Value;
+            if (monster.AC_Mods != null) {
+                monster.AC_Mods = "(" + monster.AC_Mods + ")";
+            }
+            
+            monster.AC = el1.Element("armorclass").Attribute("ac").Value + ", touch " + el1.Element("armorclass").Attribute("touch").Value + ", flat-footed " + el1.Element("armorclass").Attribute("flatfooted").Value;
 
             //HP and Hit Dice
             monster.HP = Int32.Parse(el1.Element("health").Attribute("hitpoints").Value);
-            monster.HD = el1.Element("health").Attribute("hitdice").Value;
+            monster.HD = "(" + el1.Element("health").Attribute("hitdice").Value + ")";
 
             //Saves
             attrs = el1.XPathSelectElements("saves/save");
@@ -1860,38 +1884,89 @@ namespace CombatManager {
             }
             attrs = null;
 
+            //Auras
+            count = 0;
+            attrs = el1.XPathSelectElements("auras/special");
+            foreach (XElement attr in attrs) {
+                if (count > 0) {
+                    monster.Aura += ", ";
+                }
+                monster.Aura += attr.Attribute("shortname").Value;
+                count++;
+            }
+            attrs = null;
+
+            //DR
+            try {
+                monster.DR = el1.Element("damagereduction").Element("special").Attribute("shortname").Value;
+            } catch (NullReferenceException e) { }
+
             //Speed
             monster.Speed = GetLine("Spd", statsblock, false);
             if (monster.Speed == null) {
-
                 monster.Speed = GetLine("Speed", statsblock, false);
             }
 
-
+            //Special Attacks
             monster.SpecialAttacks = GetLine("Special Attacks", statsblock, true);
 
+            //CMB, CMD, BAB
             monster.CMB = el1.Element("maneuvers").Attribute("cmb").Value;
             monster.CMD = el1.Element("maneuvers").Attribute("cmd").Value;
+            string cmbMods = null;
+            string cmdMods = null;
+            attrs = el1.XPathSelectElements("maneuvers/maneuvertype");
+            foreach (XElement attr in attrs) {
+                if (!(monster.CMB.Equals(attr.Attribute("cmb").Value))) {
+                    cmbMods += attr.Attribute("cmb").Value + " " + attr.Attribute("name").Value.ToLower() + ", ";
+                }
+                if (!(monster.CMD.Equals(attr.Attribute("cmd").Value))) {
+                    cmdMods += attr.Attribute("cmd").Value + " vs. " + attr.Attribute("name").Value.ToLower() + ", ";
+                }
+            }
+            if (cmbMods != null) {
+                monster.CMB += " (" + cmbMods.Substring(0, cmbMods.Length - 2) + ")";
+            }
+            if (cmdMods != null) {
+                monster.CMD += " (" + cmdMods.Substring(0, cmdMods.Length - 2) + ")";
+            }
             monster.BaseAtk = Int32.Parse(el1.Element("attack").Attribute("baseattack").Value.Substring(1));
 
-            monster.Feats = FixHeroLabFeats(GetLine("Feats", statsblock, true));
+            //Feats
+            count = 0;
+            attrs = el1.XPathSelectElements("feats/feat");
+            foreach (XElement attr in attrs) {
+                if (count > 0) {
+                    monster.Feats += ", ";
+                }
+                monster.Feats += attr.Attribute("name").Value;
+                count++;
+            }
 
+            //Skills
             monster.Skills = GetLine("Skills", statsblock, true);
 
+            //Languages
             monster.Languages = GetLine("Languages", statsblock, false);
 
+            //SQ
             monster.SQ = GetLine("SQ", statsblock, true);
             if (monster.SQ != null) {
                 monster.SQ = monster.SQ.ToLower();
             }
+
+            //Gear, Combat Gear
             monster.Gear = GetLine("Gear", statsblock, true);
             if (monster.Gear == null) {
                 monster.Gear = GetLine("Combat Gear", statsblock, true);
             }
 
-            monster.Space = el1.Element("size").Element("space").Attribute("value").Value;
-            monster.Reach = el1.Element("size").Element("space").Attribute("reach").Value;
+            //Space, Reach
+            monster.Space = el1.Element("size").Element("space").Attribute("value").Value + " ft.";
+            monster.Reach = el1.Element("size").Element("reach").Attribute("value").Value + " ft.";
+            // TODO: accomodate Reach modifiers
 
+            //Special Abilities
             count = 0;
             attrs = el1.XPathSelectElements("//special[@type]"); //this should retreive all nodes called special with a type attribute
             Regex regWeaponTraining = new Regex("Weapon Training: (?<group>[\\p{L}]+) \\+(?<value>[0-9]+)");
@@ -1932,10 +2007,9 @@ namespace CombatManager {
             }
             attrs = null;
 
+            //Melee Attacks
             string endAttacks = "[\\p{L}()]+ Spells (Known|Prepared)|Special Attacks|[ \\p{L}()]+Spell-Like Abilities|-------|Space [0-9]";
-
             Regex regMelee = new Regex("\r\nMelee (?<melee>(.|\r|\n)+?)\r\n(Ranged|" + endAttacks + ")");
-
             m = regMelee.Match(statsblock);
 
             if (m.Success) {
@@ -1943,72 +2017,91 @@ namespace CombatManager {
                 monster.Melee = FixHeroLabAttackString(attacks);
             }
 
+            //Ranged Attacks
             Regex regRanged = new Regex("\r\nRanged (?<ranged>(.|\r|\n)+?)\r\n(" + endAttacks + ")");
-
             m = regRanged.Match(statsblock);
 
             if (m.Success) {
                 string attacks = m.Groups["ranged"].Value;
                 monster.Ranged = FixHeroLabAttackString(attacks);
             }
-
-            /* I'm removing this block of code as it may no longer be needed. This is too complex and doesn't include DC's. 
-             * I instead format the statsblock at the start of this function and simply pull the line using regex.
-            count = 0;
-            int nextCount = 0;
-            int spellFrequency = 0;
-            isFinished = false;
-            Regex spFrequency = new Regex("\\(([^)]+)\\)"); //this should seperate the string in parenthesis. HL stores the frequency of a spell like in parenthesis. Ex: Create Water (2/day)
-            var strSpells = new List<String>();
-            attrs = null;
-            attrs = el1.XPathSelectElements("spelllike/special");
-            if (attrs != null) {
-                monster.SpellLikeAbilities = GetLine("Spell-Like Abilities", origStatsblock, false) + " "; //CL and concentration doesn't seem to be stored in XML. I have to pull from stats block.
-                while (!isFinished) {
-                    foreach (var attr in attrs) {
-                        m = spFrequency.Match(attr.Attribute("name").Value);
-                        if (m.Success) {
-                            // this if block adds each spell like ability to a list to be formatted and added to the monster. 
-                            // we sequentially search the spells and pull out each spell level from at will then up. 
-                            if (m.Value == "At Will" && count == 0) {
-                                strSpells.Add(attr.Attribute("shortname").Value); 
-                            } else {
-                                spellFrequency = Int32.Parse(m.Value.Substring(0, m.Value.IndexOf("/")));
-                                if (spellFrequency == count) {
-                                    strSpells.Add(attr.Attribute("shortname").Value);
-                                } else { //we increment the next spell level to look for if we find a spell with level 1 greater than our current level
-                                    nextCount = (spellFrequency == (count + 1)) ? spellFrequency : nextCount;
-                                }
-                            }
-                        }
-                    }
-                    strSpells.Sort();
-                    isFinished = (count == nextCount) ? true : false;
-                    count++;
-                }
+            
+            //Spell Like Abilities
+            monster.SpellLikeAbilities = GetLine("Spell-Like Abilities", statsblock, false);
+            if (monster.SpellLikeAbilities != null) {
+                monster.SpellLikeAbilities = FixSpellString(monster.SpellLikeAbilities);
             }
-            //this block is abysmmal. We loop the data several times until we get it organized properly.There has to be a better way
-            //this is also untested and possibly unfinished. 
-            // TODO: Should be removed
-            */
 
-            monster.SpellLikeAbilities = FixSpellString(GetLine("Spell-Like Abilities", statsblock, false));
-
-            //Regex regSpells = new Regex("\r\n[ \\p{L}()]+ (?<spells>Spells Known (.|\r|\n)+?)\r\n------"); //this is the old method of obtaining spells
-            Regex regSpells = new Regex("^.* Spells Known.*$");
+            //Spells Known
+            Regex regSpells = new Regex("[A-Z][a-z]+( Spells Known).*?(?=\\r\\n)");
 
             m = regSpells.Match(statsblock);
             if (m.Success) {
                 monster.SpellsKnown = FixSpellString(m.Value);
             }
 
-            //Regex regSpellsPrepared = new Regex("\r\n[ \\p{L}()]+ (?<spells>Spells Prepared (.|\r|\n)+?)\r\n------");
-            Regex regSpellsPrepared = new Regex("^.*Spells Prepared.*$");
+            //Spells Prepared
+            Regex regSpellsPrepared = new Regex("[A-Z][a-z]+( Spells Prepared).*?(?=\\r\\n)");
 
             m = regSpellsPrepared.Match(statsblock);
             if (m.Success) {
                 monster.SpellsPrepared = FixSpellString(m.Value);
             }
+
+            //Before Combat, After Combat, Morale
+            try {
+                attrs = el1.XPathSelectElements("npc/tactics/npcinfo");
+                foreach (XElement attr in attrs) {
+                    switch (attr.Attribute("name").Value) {
+                        case "Tactics - Before Combat":
+                            monster.BeforeCombat = attr.Value;
+                            break;
+                        case "Tactics - During Combat":
+                            monster.DuringCombat = attr.Value;
+                            break;
+                        case "Tactics - Morale":
+                            monster.Morale = attr.Value;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                attrs = null;
+            } catch (NullReferenceException e) {
+                //Incase the values are nonexistent
+            }
+
+            //Environment, Organization, Treasure
+            try {
+                attrs = el1.XPathSelectElements("npc/ecology/npcinfo");
+                foreach (XElement attr in attrs) {
+                    switch (attr.Attribute("name").Value) {
+                        case "Ecology - Environment":
+                            monster.Environment = attr.Value;
+                            break;
+                        case "Ecology - Organization":
+                            monster.Organization = attr.Value;
+                            break;
+                        case "Ecology - Treasure":
+                            monster.Treasure = attr.Value;
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            } catch (NullReferenceException e) {
+                //Incase the values are nonexistent
+            }
+
+            //Visual Description
+            try {
+                monster.Description_Visual = el1.Element("npc").Element("description").Value;
+            } catch (NullReferenceException e) { }
+
+            //Description
+            try {
+                monster.Description = el1.Element("personal").Element("description").Value;
+            } catch (NullReferenceException e) { }
 
         }//end ImportHeroLabBlock()
 
@@ -2018,6 +2111,9 @@ namespace CombatManager {
             spells = spells.Replace("):", ")");
             spells = spells.Replace("\r\n", " ");
             spells = spells.Replace((char)65533, ' ');
+            spells = spells.Replace("â€”", "-");
+            spells = spells.Replace("[", "(");
+            spells = spells.Replace("]", ")");
 
             return spells;
 
