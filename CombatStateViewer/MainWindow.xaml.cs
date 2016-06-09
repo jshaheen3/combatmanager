@@ -137,7 +137,7 @@ namespace CombatStateViewer
                     if (OpenServiceClient(server))
                     {
 
-                        _Characters = new List<Character>(serviceClient.GetCharacters());
+                        _Characters = new List<Character>(serviceClient.GetCharacters().Count());
 
                         CombatStateService.SimpleCombatListItem[] items = serviceClient.GetCombatList();
                         _GuidCombatList = new List<CombatStateService.SimpleCombatListItem>(items);
@@ -246,7 +246,7 @@ namespace CombatStateViewer
             }
             if (load)
             {
-                _Characters = new List<Character>(serviceClient.GetCharacters());
+                _Characters = new List<Character>(serviceClient.GetCharacters().Count());
             }
 
         }
