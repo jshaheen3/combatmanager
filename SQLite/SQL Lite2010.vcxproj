@@ -23,6 +23,7 @@
     <ProjectGuid>{A439CDFA-47B8-4103-91A0-66552227F05C}</ProjectGuid>
     <RootNamespace>SQLLite</RootNamespace>
     <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -82,6 +83,18 @@
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
     <EmbedManifest Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</EmbedManifest>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <TargetName>SQLite32</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <TargetName>SQLite32</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <TargetName>SQLite64</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <TargetName>SQLite64</TargetName>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <AdditionalOptions>/wd4244 /wd4018 /wd4996 /wd4267 /wd4307 /wd4308 /wd4090 /DSQLITE_ENABLE_FTS4 /DSQLITE_ENABLE_STAT2 /DSQLITE_ENABLE_FTS3_PARENTHESIS /DSQLITE_ENABLE_RTREE %(AdditionalOptions)</AdditionalOptions>
@@ -123,7 +136,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <OutputFile>$(SolutionDir)\CombatManager\Bin\$(Configuration)\SQL Lite DLL.dll</OutputFile>
+      <OutputFile>$(OutDir)SQLite64.dll</OutputFile>
       <ModuleDefinitionFile>sqlitedll.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -176,7 +189,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <OutputFile>$(SolutionDir)\CombatManager\Bin\$(Configuration)\SQL Lite DLL.dll</OutputFile>
+      <OutputFile>$(OutDir)SQLite64.dll</OutputFile>
       <ModuleDefinitionFile>sqlitedll.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
