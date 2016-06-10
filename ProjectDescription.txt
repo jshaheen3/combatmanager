@@ -1,0 +1,24 @@
+[CombatManager.sln]
+Solution for Windows project
+[CombatManager]
+Windows Application for Combat Manager
+[CombatManagerCore]
+Core Data for Combat Manager. Files are designed to work on Windows and Mono
+[CombatViewService]
+Unused WCF Project for communicating between
+[DetailsRipper]
+Project for compressing data in data files and moving some data to SQL Lite DBs
+[PropertyCreator]
+Project for quick property with notification creation
+[RandomItemWeightFixer]
+Project which has whatever random code I needed. Used at times for building treasure charts or modifying spells
+[SQL Lite DLL]
+DLL for SQLite. Needs to be built in x86 and x64 to run Combat Manager
+[CMInstaller]
+The installer
+[CombatManagerMono.sln]
+Solution for iOS/Monotouch project. Requires Monotouch to use
+[CombatManagerMono]
+The iOS app. Currently only set up to run iPad
+[CombatManagerCoreMono]
+The CombatManagerCore project designed to run on mono
