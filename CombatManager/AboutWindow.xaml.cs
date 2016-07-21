@@ -72,7 +72,7 @@ namespace CombatManager
 
         private void Hyperlink_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("http://combatmanager.com");
+            System.Diagnostics.Process.Start("https://github.com/wwpowers01/combatmanager");
         }
     }
 }
