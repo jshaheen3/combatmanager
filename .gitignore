@@ -210,5 +210,5 @@ FakesAssemblies/
 GeneratedArtifacts/
 _Pvt_Extensions/
 ModelManifest.xml
-CombatManager.VC.db
-CombatManager.VC.VC.opendb
+*.VC.db
+*.VC.VC.opendb
