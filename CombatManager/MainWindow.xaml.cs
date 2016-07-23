@@ -7997,7 +7997,7 @@ namespace CombatManager
 
         private void UpdateButton_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("http://combatmanager.com");
+            System.Diagnostics.Process.Start("https://github.com/wwpowers01/combatmanager");
         }
 
         private void PerformUpdateCheck()
@@ -8008,7 +8008,7 @@ namespace CombatManager
                 {
                     try
                     {
-                        HttpWebRequest rq1 = (HttpWebRequest)WebRequest.Create("http://CombatManager.com/version.xml");
+                        HttpWebRequest rq1 = (HttpWebRequest)WebRequest.Create("https://raw.githubusercontent.com/wwpowers01/combatmanager/master/CombatManager/version/version.xml");
                         HttpWebResponse rsp1 = (HttpWebResponse)rq1.GetResponse();
 
                         XDocument doc = XDocument.Load(rsp1.GetResponseStream());
@@ -8019,6 +8019,7 @@ namespace CombatManager
 
                         Version remotev = Version.Parse(val);
                         Version localv = Assembly.GetExecutingAssembly().GetName().Version;
+                        // Local version is located in Properties/AssemblyInfo.cs file
 
                         if (remotev.CompareTo(localv) > 0)
                         {
