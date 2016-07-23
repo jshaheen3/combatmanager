@@ -60,7 +60,7 @@ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
         		<DropShadowEffect/>
         	</TextBlock.Effect>
         	
-        	<Hyperlink Click="Hyperlink_Click" Foreground="White">https://github.com/wwpowers01/combatmanager</Hyperlink>     	
+        	<Hyperlink Click="Hyperlink_Click" Foreground="White">http://combatmanager.com</Hyperlink>     	
 			      
 		</TextBlock>
         <TextBlock Grid.Column="1" HorizontalAlignment="Left" Margin="59,100.869,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Foreground="White" Width="242.167" Text="Thanks to Paizo.com, d20pfsrd.com, chopswil, and Scott Seligman for Pathfinder data."><TextBlock.Effect>
