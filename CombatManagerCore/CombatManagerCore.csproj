@@ -32,6 +32,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -42,6 +43,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SQLite\SQL Lite.cs">
@@ -87,6 +89,7 @@
     <Compile Include="monster.cs" />
     <Compile Include="MonsterDB.cs" />
     <Compile Include="MonsterHtmlCreator.cs" />
+    <Compile Include="NameGenerator.cs" />
     <Compile Include="ParsedFeat.cs" />
     <Compile Include="Pathfinder.Herolab.Serializable.class.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
