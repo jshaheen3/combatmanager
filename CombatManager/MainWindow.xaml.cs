@@ -104,6 +104,9 @@ namespace CombatManager
         CampaignInfo campaignInfo;
 		ListCollectionView campaignDayView;
 
+        //Name Generator
+        NameGenerator nameGenerator;
+
         //for dragging top and left
         double dragStartLeft;
         double dragStartWidth;
@@ -199,6 +202,9 @@ namespace CombatManager
 
             LoadRecentDieRolls();
             MarkTime("Die Rolls", ref t, ref last);
+
+            LoadNameGenerator();
+            MarkTime("Name Generator", ref t, ref last);
 
             LoadCampaignInfo();
 
@@ -7997,7 +8003,7 @@ namespace CombatManager
 
         private void UpdateButton_Click(object sender, RoutedEventArgs e)
         {
-            System.Diagnostics.Process.Start("http://combatmanager.com");
+            System.Diagnostics.Process.Start("https://github.com/wwpowers01/combatmanager");
         }
 
         private void PerformUpdateCheck()
@@ -8008,7 +8014,7 @@ namespace CombatManager
                 {
                     try
                     {
-                        HttpWebRequest rq1 = (HttpWebRequest)WebRequest.Create("http://CombatManager.com/version.xml");
+                        HttpWebRequest rq1 = (HttpWebRequest)WebRequest.Create("https://raw.githubusercontent.com/wwpowers01/combatmanager/master/CombatManager/version/version.xml");
                         HttpWebResponse rsp1 = (HttpWebResponse)rq1.GetResponse();
 
                         XDocument doc = XDocument.Load(rsp1.GetResponseStream());
@@ -8019,6 +8025,7 @@ namespace CombatManager
 
                         Version remotev = Version.Parse(val);
                         Version localv = Assembly.GetExecutingAssembly().GetName().Version;
+                        // Local version is located in Properties/AssemblyInfo.cs file
 
                         if (remotev.CompareTo(localv) > 0)
                         {
@@ -8277,7 +8284,51 @@ namespace CombatManager
 
         }
 
+        #region NameGenerator
 
+        private void LoadNameGenerator()
+        {
+            nameGenerator = new NameGenerator();
+
+            nameGenerator.AddTypeFilters(NameTypeFilterComboBox);
+            nameGenerator.AddGenderFilters(NameSecondFilterComboBox);
+            
+        }
+
+        private void ResetNameFilterButton_Click(object sender, RoutedEventArgs e)
+        {
+            NameTypeFilterComboBox.SelectedIndex = 0;
+            NameSecondFilterComboBox.SelectedIndex = 0;
+            NameTextBlock.Text = "";
+        }
+
+        private void NameTypeFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            /* May want to add a sub-catagory instead of Gender. Let Elf, Wood. */
+            if (NameTypeFilterComboBox.SelectedIndex == (int)NameGenerator.RaceFilter.Random)
+                nameGenerator.AddNumberFilters(NameSecondFilterComboBox);
+            else
+                nameGenerator.AddGenderFilters(NameSecondFilterComboBox);
+            NameTextBlock.Text = "";
+        }
+
+        private void NameSecondFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            
+            NameTextBlock.Text = "";
+        }
+
+        private void NameGenerate_Click(object sender, RoutedEventArgs e)
+        {
+            NameTextBlock.Text = nameGenerator.Update(NameTypeFilterComboBox.SelectedIndex, NameSecondFilterComboBox.SelectedIndex);
+        }
+
+        private void NamePrintButton_Click(object sender, RoutedEventArgs e)
+        {
+            NameFlowDocument.Print();
+        }
+
+        #endregion
 
 
     }
