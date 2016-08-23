@@ -54,6 +54,7 @@ namespace CombatManager
             StatsOpenByDefaultCheckbox.IsChecked = UserSettings.Settings.StatsOpenByDefault;
             RollAlternateInitDiceBox.Text = UserSettings.Settings.AlternateInitRoll;
             CheckForUpdatesCheckbox.IsChecked = UserSettings.Settings.CheckForUpdates;
+            ShowExtraTabsCheckbox.IsChecked = UserSettings.Settings.ShowExtraTabs;
 
             RollAlternateInitDiceBox.TextChanged += new TextChangedEventHandler(RollAlternateInitDiceBox_TextChanged);
 		}
@@ -76,6 +77,7 @@ namespace CombatManager
             UserSettings.Settings.AddMonstersHidden = AddMonstersHiddenBox.IsChecked.Value;
             UserSettings.Settings.StatsOpenByDefault = StatsOpenByDefaultCheckbox.IsChecked.Value;
             UserSettings.Settings.CheckForUpdates = CheckForUpdatesCheckbox.IsChecked.Value;
+            UserSettings.Settings.ShowExtraTabs = ShowExtraTabsCheckbox.IsChecked.Value;
             UserSettings.Settings.SaveOptions();
 
             CombatState.use3d6 = UserSettings.Settings.AlternateInit3d6;

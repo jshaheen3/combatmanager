@@ -104,6 +104,9 @@ namespace CombatManager
         CampaignInfo campaignInfo;
 		ListCollectionView campaignDayView;
 
+        // Weather
+        WeatherGenerator weatherGenerator;
+
         //for dragging top and left
         double dragStartLeft;
         double dragStartWidth;
@@ -200,9 +203,12 @@ namespace CombatManager
             LoadRecentDieRolls();
             MarkTime("Die Rolls", ref t, ref last);
 
+            LoadWeatherGenerator();
+            MarkTime("Weather", ref t, ref last);
+
             LoadCampaignInfo();
-
-
+            MarkTime("Campaign Info", ref t, ref last);
+            
             mainWindowLoaded = true;
             UpdateMonsterFlowDocument();
 
@@ -408,6 +414,8 @@ namespace CombatManager
             LoadHotkeys();
 
             PerformUpdateCheck();
+
+            ShowExtraTabs();
             
         }
 
@@ -1534,7 +1542,7 @@ namespace CombatManager
 
            
             }
-            else if (e.Type == "School")
+            else if ((e.Type == "School") || (e.Type == "Rule"))
             {
                 RulesTabFilterBox.Text = e.Name;
 
@@ -6328,9 +6336,51 @@ namespace CombatManager
             }
         }
 
+
+        #region Weather Generator
+        private void LoadWeatherGenerator()
+        {
+            weatherGenerator = new WeatherGenerator(BlockLinkClicked);
+            weatherGenerator.AddClimateFilters(WeatherClimateFilterComboBox);
+            weatherGenerator.AddSeasonFilters(WeatherSeasonFilterComboBox);
+        }
+
+        private void ResetWeather_Click(object sender, RoutedEventArgs e)
+        {
+            WeatherClimateFilterComboBox.SelectedIndex = (int)WeatherGenerator.Climate.Temperate;
+            WeatherSeasonFilterComboBox.SelectedIndex = 0;
+            WeatherFlowDocument.Document.Blocks.Clear();
+        }
+
+        private void WeatherClimateFilterComboBox_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            WeatherFlowDocument.Document.Blocks.Clear();
+            if (WeatherClimateFilterComboBox.SelectedIndex == (int)WeatherGenerator.Climate.Temperate)
+                WeatherSeasonFilterComboBox.Visibility = Visibility.Visible;
+            else
+                WeatherSeasonFilterComboBox.Visibility = Visibility.Hidden;
+        }
+
+        private void WeatherSeasonFilterComboBox_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            WeatherFlowDocument.Document.Blocks.Clear();
+        }
+
+        private void WeatherGenerate_Click(object sender, RoutedEventArgs e)
+        {
+            weatherGenerator.Update(WeatherFlowDocument.Document, WeatherClimateFilterComboBox.SelectedIndex, WeatherSeasonFilterComboBox.SelectedIndex);
+        }
+
+        private void WeatherPrintButton_Click(object sender, RoutedEventArgs e)
+        {
+            WeatherFlowDocument.Print();
+        }
+
+        #endregion
+
         #region Die roll section
 
-            private void RollDiceButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        private void RollDiceButton_Click(object sender, System.Windows.RoutedEventArgs e)
             {
                 RollCurrentTextDie();
             }
@@ -8000,6 +8050,15 @@ namespace CombatManager
             System.Diagnostics.Process.Start("https://github.com/wwpowers01/combatmanager");
         }
 
+        private void ShowExtraTabs()
+        {
+            if (UserSettings.Settings.ShowExtraTabs)
+            {
+                WeatherTab.Visibility = Visibility.Visible;
+                CalendarTab.Visibility = Visibility.Visible;
+            }
+        }
+
         private void PerformUpdateCheck()
         {
             if (UserSettings.Settings.CheckForUpdates)
@@ -8277,9 +8336,6 @@ namespace CombatManager
             }
 
         }
-
-
-
 
     }
 

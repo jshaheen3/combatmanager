@@ -5,13 +5,13 @@
 	x:Class="CombatManager.SettingsDialog"
 	x:Name="Window"
 	Title="Settings"
-	Width="258" Height="299.583" ResizeMode="NoResize" Icon="/CombatManager;component/Images/d20-32.ico" ShowInTaskbar="False">
+	Width="258" Height="320.621" ResizeMode="NoResize" Icon="/CombatManager;component/Images/d20-32.ico" ShowInTaskbar="False">
 
 	<Grid x:Name="LayoutRoot" Margin="0,0,0,0">
 		<Grid.Background>
 			<SolidColorBrush Color="{DynamicResource PrimaryColorLight}"/>
 		</Grid.Background>
-		<Border BorderThickness="1" Margin="8,14,8,41.25" CornerRadius="6">
+		<Border BorderThickness="1" Margin="10,14,8,34" CornerRadius="6">
 			<Border.Background>
 				<SolidColorBrush Color="{DynamicResource SecondaryColorALight}"/>
 			</Border.Background>
@@ -26,9 +26,10 @@
 				<CheckBox x:Name="ShowHiddenInitValueBox" Content="Show Hidden Init Value" HorizontalAlignment="Left" Margin="6,146.077,0,0" VerticalAlignment="Top"/>
 				<CheckBox x:Name="StatsOpenByDefaultCheckbox" Content="Stats Panel Begins Open" HorizontalAlignment="Left" Margin="6,165.175,0,0" VerticalAlignment="Top"/>
 				<CheckBox x:Name="CheckForUpdatesCheckbox" Content="Check For Updates" HorizontalAlignment="Left" Margin="6,184.273,0,0" VerticalAlignment="Top"/>
-			</Grid>
+                <CheckBox x:Name="ShowExtraTabsCheckbox" Content="Show Extra Tabs" HorizontalAlignment="Left" Margin="6,204,0,0" VerticalAlignment="Top"/>
+            </Grid>
 		</Border>
-		<Button Content="OK" HorizontalAlignment="Right" Margin="0,0,87,13" VerticalAlignment="Bottom" Width="75" IsDefault="True" Click="Button_Click" x:Name="OKButton" />
-		<Button Content="Cancel" HorizontalAlignment="Right" Margin="0,0,8,13" VerticalAlignment="Bottom" Width="75" IsCancel="True"/>
+		<Button Content="OK" HorizontalAlignment="Right" Margin="0,0,88,7" VerticalAlignment="Bottom" Width="75" IsDefault="True" Click="Button_Click" x:Name="OKButton" />
+		<Button Content="Cancel" HorizontalAlignment="Right" Margin="0,0,10,7" VerticalAlignment="Bottom" Width="75" IsCancel="True"/>
 	</Grid>
 </Window>

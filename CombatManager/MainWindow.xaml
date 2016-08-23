@@ -3791,7 +3791,7 @@
         			</TabControl>
         		</Grid>
         	</TabItem>
-            <TabItem x:Name="CalendarTab" IsSelected="True" Visibility="Hidden">
+            <TabItem x:Name="CalendarTab" Visibility="Hidden">
         		<TabItem.Header>
         			<StackPanel Orientation="Horizontal">
         				<Image Width="16" Height="16" Source="Images\clock-16.png" />
@@ -3861,6 +3861,47 @@
                         <Button x:Name="GoToCurrentDate" Content="Go to Current Date" HorizontalAlignment="Left" Margin="8,180,0,0" Grid.Row="1" VerticalAlignment="Top" Width="173" Click="GoToCurrentDate_Click"/>
                     </Grid>
                 </Border>
+            </TabItem>
+            <TabItem x:Name="WeatherTab" Visibility="Hidden">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="16" Height="16" Source="Images\lightning-16.png" />
+                        <TextBlock Text="Weather Generator" Margin="5,0,0,0" />
+                       
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid x:Name="WeatherTabGrid">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30" />
+                        <RowDefinition/>
+                        <RowDefinition Height="Auto" MinHeight="32"/>
+                        <RowDefinition Height="6"/>
+                        
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="185" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <Button x:Name="ResetWeatherButton" Grid.Column="1" HorizontalAlignment="Left" Margin="0,4,0,0" VerticalAlignment="Top" Click="ResetWeather_Click">
+                        <Image Height="16" Source="Images/reset-16.png" Stretch="Fill" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Button>
+                    <ComboBox x:Name="WeatherClimateFilterComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="24,4,0,4"  d:LayoutOverrides="Height" SelectionChanged="WeatherClimateFilterComboBox_SelectionChanged" Width="173" />
+                    <ComboBox x:Name="WeatherSeasonFilterComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="200,4,0,4" d:LayoutOverrides="Height" SelectionChanged="WeatherSeasonFilterComboBox_SelectionChanged" Width="131"/>
+
+                    <Button x:Name="WeatherGenerate" Grid.Column="1" HorizontalAlignment="Left" Margin="350,4,0,0" VerticalAlignment="Top" Click="WeatherGenerate_Click">
+                        <Image Height="16" Source="Images/lightning-16.png" Stretch="Fill" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Button>
+
+                    <Button x:Name="WeatherPrintButton" Grid.Column="1" HorizontalAlignment="Right" Margin="0,4,4,4" d:LayoutOverrides="Height" Click="WeatherPrintButton_Click">
+                        <Image Height="16" Source="Images/PrintHS.png" Stretch="Fill" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Button>
+
+                    <FlowDocumentScrollViewer x:Name="WeatherFlowDocument" Grid.Column="1" Margin="1,33,1,8" Background="White" VerticalScrollBarVisibility="Disabled" Grid.RowSpan="4" Grid.Row="0" Foreground="Black">
+                        <FlowDocument Background="White" FontFamily="/CombatManager;component/Fonts/#Segoe UI" TextAlignment="Left"/>
+                    </FlowDocumentScrollViewer>
+
+                </Grid>
             </TabItem>
 
         </TabControl>
