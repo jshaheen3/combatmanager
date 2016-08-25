@@ -54,6 +54,7 @@ using System.Net;
 using System.Xml.Linq;
 using System.Reflection;
 
+
 namespace CombatManager
 {
     /// <summary>
@@ -8325,10 +8326,23 @@ namespace CombatManager
 
             uint? color = null;
 
-            if (mi.Name == "RedColorMenuItem")
+            switch (mi.Name)
             {
-                color =  0xffff0000;
+                case "RedColorMenuItem":
+                    color = (uint)System.Drawing.Color.Red.ToArgb();
+                    break;
+                case "BlueColorMenuItem":
+                    color = (uint)System.Drawing.Color.CornflowerBlue.ToArgb();
+                    break;
+                case "GreenColorMenuItem":
+                    color = (uint)System.Drawing.Color.LightGreen.ToArgb();
+                    break;
+                case "YellowColorMenuItem":
+                    color = (uint)System.Drawing.Color.Yellow.ToArgb();
+                    break;
             }
+               
+                
 
             foreach (Character ch in list)
             {

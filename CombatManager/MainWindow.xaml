@@ -231,10 +231,11 @@
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem Header="Color">
-                <MenuItem Header="None" x:Name="NoColorMenuItem" Click="ColorMenuItem_Click">
-                </MenuItem>
-                <MenuItem Header="Red" x:Name="RedColorMenuItem" Click="ColorMenuItem_Click">                    
-                </MenuItem>
+                <MenuItem Header="None" x:Name="NoColorMenuItem"   Click="ColorMenuItem_Click"/>
+                <MenuItem Header="Red"  x:Name="RedColorMenuItem"  Click="ColorMenuItem_Click"/>
+                <MenuItem Header="Blue" x:Name="BlueColorMenuItem" Click="ColorMenuItem_Click"/>
+                <MenuItem Header="Green" x:Name="GreenColorMenuItem" Click="ColorMenuItem_Click"/>
+                <MenuItem Header="Yellow" x:Name="YellowColorMenuItem" Click="ColorMenuItem_Click"/>
             </MenuItem>
             <Separator/>
             <MenuItem Header="Roll">
