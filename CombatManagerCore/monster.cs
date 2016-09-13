@@ -388,6 +388,7 @@ namespace CombatManager {
         private int? _PreLossDex;
         private bool _StrZero;
         private int? _PreLossStr;
+        private bool _PowerAttack;
 
         private int _DBLoaderID;
 
@@ -6072,6 +6073,18 @@ namespace CombatManager {
             if (bonus.StrZero) {
                 StrZero = !remove;
             }
+            if (bonus.PowerAttack)
+            {
+                PowerAttack = !remove;
+
+                int ab = -1 - (baseAtk / 4);
+                int db = 2 + (2 * (baseAtk / 4));
+                ab = remove ? -ab : ab;
+                db = remove ? -db : db;
+
+                Melee = ChangeAttackMods(Melee, ab);
+                Melee = ChangeAttackDamage(Melee, db, (int)(db * 1.5), (int)(db / 2));
+            }
         }
 
         public static Stat StatFromName(string name) {
@@ -6465,14 +6478,17 @@ namespace CombatManager {
                     int applyDiff = diff;
 
                     if (info.Weapon != null) {
-                        if (info.Weapon.Class == "Natual" && info.Weapon.Light) {
+                        if (info.Weapon.Class == "Natural" && info.Weapon.Light) {
                             applyDiff = halfDiff;
                         } else if (info.Weapon.Hands == "Two-Handed") {
                             applyDiff = diffPlusHalf;
                         }
                     }
 
-
+                    // One handed weapon used with 2 hands doing power attack should be diffPlusHalf instead of diff
+                    // info is showing One-Handed
+                    // need to look up using this.MeleeAttacks to see how the weapon is being used.
+                    
                     info.Damage.mod += applyDiff;
 
                     if (info.OffHandDamage != null) {
@@ -7470,6 +7486,23 @@ namespace CombatManager {
             }
             set {
                 Type = Monster.CreatureTypeText(value);
+            }
+        }
+
+        [XmlIgnore]
+        public bool PowerAttack
+        {
+            get
+            {
+                return _PowerAttack;
+            }
+            set
+            {
+                if (_PowerAttack != value)
+                {
+                    _PowerAttack = value;
+                    NotifyPropertyChanged("PowerAttack");
+                }
             }
         }
 

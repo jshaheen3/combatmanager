@@ -19,14 +19,11 @@
  *
  */
 
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Xml.Serialization;
-using System.Collections.ObjectModel;
 
 namespace CombatManager
 {
@@ -35,6 +32,7 @@ namespace CombatManager
         Condition,
         Spell,
         Afflicition,
+        Feat,
         Custom
     }
 
@@ -60,12 +58,13 @@ namespace CombatManager
         public ConditionType Type
         {
             get { return _Type; }
+
             set
             {
                 if (_Type != value)
                 {
                     _Type = value;
-                    if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs("Type")); }
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Type"));
                 }
             }
         }
@@ -93,6 +92,7 @@ namespace CombatManager
 
         private static List<Condition> _Conditions;
         private static List<Condition> _CustomConditions;
+        private static List<Condition> _FeatConditions;
         private static List<FavoriteCondition> _FavoriteConditions;
         private static List<FavoriteCondition> _RecentCondtions;
 
@@ -108,11 +108,35 @@ namespace CombatManager
 #if !MONO
             LoadMonsterConditions();
 #endif
+            LoadFeatConditions();
             LoadCustomConditions();
             LoadFavoriteConditions();
             LoadRecentConditions();
 
         }
+
+        private static void LoadFeatConditions()
+        {
+          
+            foreach (Feat f in Feat.Feats)
+            {
+                /* Start with Power Attack for now */
+                if (f.Name != "Power Attack")
+                    continue;
+
+                Condition c = new Condition();
+                c.Name = f.Name;
+                c.Image = "sword-single";
+                c.Feat = f;
+                c.Text = f.Benefit;
+                c.Bonus = new ConditionBonus();
+                c.Bonus.PowerAttack = true;
+
+                Conditions.Add(c);
+
+            }
+        }
+        
 
         private static void LoadCustomConditions()
         {
@@ -254,6 +278,7 @@ namespace CombatManager
                 _FavoriteConditions.Add(new FavoriteCondition(ByName("Grappled")));
                 _FavoriteConditions.Add(new FavoriteCondition(ByName("Pinned")));
                 _FavoriteConditions.Add(new FavoriteCondition(ByName("Prone")));
+                _FavoriteConditions.Add(new FavoriteCondition(ByName("Power Attack")));
 
 
             }
@@ -265,17 +290,18 @@ namespace CombatManager
             XmlListLoader<FavoriteCondition>.Save(list, "FavoriteConditions.xml", true);
         }
 
-
+        /*
         static Condition()
         {
         }
-
+        */
 
         private String _Name;
         private String _Text;
         private String _Image;
         private Spell _Spell;
         private Affliction _Affliction;
+        private Feat _Feat;
         private ConditionBonus _Bonus;
         private bool _Custom;
 
@@ -300,6 +326,10 @@ namespace CombatManager
             {
                 _Affliction = (Affliction)c._Affliction.Clone();
             }
+            if (c._Feat != null)
+            {
+                _Feat = (Feat)c._Feat.Clone();
+            }
         }
 
         public object Clone()
@@ -316,7 +346,7 @@ namespace CombatManager
                 if (_Name != value)
                 {
                     _Name = value;
-                    if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs("Name")); }
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Name"));
                 }
             }
         }
@@ -328,7 +358,7 @@ namespace CombatManager
                 if (_Text != value)
                 {
                     _Text = value;
-                    if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs("Text")); }
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Text"));
                 }
             }
         }
@@ -341,7 +371,7 @@ namespace CombatManager
                 if (_Image != value)
                 {
                     _Image = value;
-                    if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs("Image")); }
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Image"));
                 }
             }
         }
@@ -354,7 +384,7 @@ namespace CombatManager
                 if (_Spell != value)
                 {
                     _Spell = value;
-                    if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs("Spell")); }
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Spell"));
                 }
             }
 
@@ -368,10 +398,23 @@ namespace CombatManager
                 if (_Affliction != value)
                 {
                     _Affliction = value;
-                    if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs("Affliction")); }
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Affliction"));
                 }
             }
 
+        }
+
+        public Feat Feat
+        {
+            get { return _Feat; }
+            set
+            {
+                if (_Feat != value)
+                {
+                    _Feat = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Feat"));
+                }
+            }
         }
 
 
@@ -383,7 +426,7 @@ namespace CombatManager
                 if (_Custom != value)
                 {
                     _Custom = value;
-                    if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs("Custom")); }
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Custom"));
                 }
             }
 
@@ -399,7 +442,7 @@ namespace CombatManager
                 if (_Bonus != value)
                 {
                     _Bonus = value;
-                    if (PropertyChanged != null) { PropertyChanged(this, new PropertyChangedEventArgs("Bonus")); }
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("Bonus"));
                 }
             }
         }
@@ -541,6 +584,10 @@ namespace CombatManager
                 else if (Affliction != null)
                 {
                     return ConditionType.Afflicition;
+                }
+                else if (Feat != null)
+                {
+                    return ConditionType.Feat;
                 }
                 else
                 {
