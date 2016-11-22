@@ -75,6 +75,7 @@ namespace CombatManager
         private bool _AddMonstersHidden;
         private bool _StatsOpenByDefault;
         private bool _CheckForUpdates;
+        private bool _ShowExtraTabs;
 
         private bool _PlayerMiniMode;
         private bool _MonsterMiniMode;
@@ -125,6 +126,7 @@ namespace CombatManager
             _MonsterMiniMode = false;
             _RunCombatViewService = false;
             _CheckForUpdates = true;
+            _ShowExtraTabs = false;
             _MainWindowWidth = -1;
             _MainWindowHeight = -1;
             _MainWindowLeft = int.MinValue;
@@ -476,6 +478,19 @@ namespace CombatManager
             }
         }
 
+        public bool ShowExtraTabs
+        {
+            get { return _ShowExtraTabs; }
+            set
+            {
+                if (_ShowExtraTabs != value)
+                {
+                    _ShowExtraTabs = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("ShowExtraTabs"));
+                }
+            }
+        }
+
         public int InitiativeConditionsSize
         {
             get { return _InitiativeConditionsSize; }
@@ -649,7 +664,8 @@ namespace CombatManager
                 ShowHiddenInitValue = LoadBoolValue("ShowHiddenInitValue", false);
                 AddMonstersHidden = LoadBoolValue("AddMonstersHidden", false);
                 StatsOpenByDefault = LoadBoolValue("StatsOpenByDefault", false);
-                CheckForUpdates = LoadBoolValue("CheckForUpdates", true); 
+                CheckForUpdates = LoadBoolValue("CheckForUpdates", true);
+                ShowExtraTabs = LoadBoolValue("ShowExtraTabs", false);
                 MonsterDBFilter = (MonsterSetFilter)LoadIntValue("MonsterDBFilter", (int)MonsterSetFilter.Monsters);
                 MonsterTabFilter = (MonsterSetFilter)LoadIntValue("MonsterTabFilter", (int)MonsterSetFilter.Monsters);
 
@@ -691,6 +707,7 @@ namespace CombatManager
                         SaveBoolValue(key, "AddMonstersHidden", AddMonstersHidden);
                         SaveBoolValue(key, "StatsOpenByDefault", StatsOpenByDefault);
                         SaveBoolValue(key, "CheckForUpdates", CheckForUpdates);
+                        SaveBoolValue(key, "ShowExtraTabs", ShowExtraTabs);
                         
                     }
 

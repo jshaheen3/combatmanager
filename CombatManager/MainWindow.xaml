@@ -231,10 +231,11 @@
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem Header="Color">
-                <MenuItem Header="None" x:Name="NoColorMenuItem" Click="ColorMenuItem_Click">
-                </MenuItem>
-                <MenuItem Header="Red" x:Name="RedColorMenuItem" Click="ColorMenuItem_Click">
-                </MenuItem>
+                <MenuItem Header="None" x:Name="NoColorMenuItem"   Click="ColorMenuItem_Click"/>
+                <MenuItem Header="Red"  x:Name="RedColorMenuItem"  Click="ColorMenuItem_Click"/>
+                <MenuItem Header="Blue" x:Name="BlueColorMenuItem" Click="ColorMenuItem_Click"/>
+                <MenuItem Header="Green" x:Name="GreenColorMenuItem" Click="ColorMenuItem_Click"/>
+                <MenuItem Header="Yellow" x:Name="YellowColorMenuItem" Click="ColorMenuItem_Click"/>
             </MenuItem>
             <Separator/>
             <MenuItem Header="Roll">
@@ -2590,8 +2591,7 @@
                 <Grid Margin="0,0,0,0" d:LayoutOverrides="VerticalMargin" >
                     <Grid.RowDefinitions>
                         <RowDefinition Height="0"/>
-                        <RowDefinition Height="35
-						"/>
+                        <RowDefinition Height="35"/>
                         <RowDefinition Height="25"/>
                         <RowDefinition Height="29"/>
                         <RowDefinition Height="0.474*"/>
@@ -3014,98 +3014,104 @@
                                                     <ComboBoxItem x:Name="CombatNPCFilterCustomItem" Content="Custom"/>
                                                     <ComboBoxItem x:Name="CombatNPCFilterAllItem" Content="All" IsSelected="True" />
 
-                                                </ComboBox>
-                                                <Button x:Name="AddMonsterFromListButton" IsEnabled="{Binding CurrentItem, Converter={StaticResource itemExistsConverter}}" Margin="0,0,72.25,25.71" VerticalAlignment="Bottom" Click="AddMonsterFromListButton_Click" Height="23">
-                                                    <StackPanel Orientation="Horizontal">
-                                                        <Path Data="M3,0 L6,0 L6,3 L9,3 L9,6 L6,6 L6,9 L3,9 L3,6 L0,6 L0,3 L3,3 z" HorizontalAlignment="Left" StrokeStartLineCap="Round" Stretch="Fill" StrokeEndLineCap="Round" Width="15" Height="15" Margin="2,0,0,0" Stroke="#FF115E16" Fill="#FF3AE54D">
-                                                            <Path.Effect>
-                                                                <DropShadowEffect ShadowDepth="2"/>
-                                                            </Path.Effect>
-                                                        </Path>
-                                                        <TextBlock Text="Add" Margin="6,0,7,0" HorizontalAlignment="Left"/>
+                                                    
+                                                    
+        										</ComboBox>
+        										<Button x:Name="AddMonsterFromListButton" IsEnabled="{Binding CurrentItem, Converter={StaticResource itemExistsConverter}}" Margin="0,0,72.25,25.71" VerticalAlignment="Bottom" Click="AddMonsterFromListButton_Click" Height="23">
+        											<StackPanel Orientation="Horizontal">
+        												<Path Data="M3,0 L6,0 L6,3 L9,3 L9,6 L6,6 L6,9 L3,9 L3,6 L0,6 L0,3 L3,3 z" HorizontalAlignment="Left" StrokeStartLineCap="Round" Stretch="Fill" StrokeEndLineCap="Round" Width="15" Height="15" Margin="2,0,0,0" Stroke="#FF115E16" Fill="#FF3AE54D">
+        													<Path.Effect>
+        														<DropShadowEffect ShadowDepth="2"/>
+        													</Path.Effect>
+        												</Path>
+        												<TextBlock Text="Add" Margin="6,0,7,0" HorizontalAlignment="Left"/>
+                                                        <TextBox x:Name="MonsterNumberMonsters" VerticalAlignment="Top" KeyDown="monsterAddTextBox_KeyDown" Height="Auto" FontSize="10" MinWidth="20" Text="1"/>
                                                     </StackPanel>
-                                                </Button>
-                                                <Border Margin="0" Background="{DynamicResource PrimaryColorGradientBrush}" Height="24.372" VerticalAlignment="Bottom">
-                                                    <CheckBox x:Name="RollHPCheck" Margin="4,0,0,0" d:LayoutOverrides="Height" HorizontalAlignment="Left" IsChecked="True" Checked="RollHPCheck_Checked" Unchecked="RollHPCheck_Unchecked" VerticalAlignment="Center">
-                                                        <TextBlock Text="Roll Monster HP" Foreground="White"/>
-                                                    </CheckBox>
-                                                </Border>
-                                            </Grid>
-                                        </AvalonDock:DockableContent>
-                                    </AvalonDock:DockablePane>
-                                </AvalonDock:ResizingPanel>
-                            </AvalonDock:ResizingPanel>
-                        </AvalonDock:DockingManager>
-                    </Grid>
-                    <Grid Grid.Column="0" Margin="0,0,0,0" Grid.Row="1" Grid.ColumnSpan="7">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="0"/>
-                            <ColumnDefinition Width="190"/>
-                            <ColumnDefinition Width="230"/>
-                            <ColumnDefinition Width="230"/>
-                            <ColumnDefinition/>
-                            <ColumnDefinition Width="0"/>
-                        </Grid.ColumnDefinitions>
-                        <Rectangle Fill="{DynamicResource LightBackgroundBrush}" Margin="1" RadiusX="5" RadiusY="5" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="1"/>
-                        <Rectangle Margin="4,3.54,4,3" RadiusX="6" RadiusY="6" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Fill="{DynamicResource DarkBackgroundBrush}"/>
-                        <TextBlock HorizontalAlignment="Left" Margin="8,0,0,0" TextWrapping="Wrap" FontSize="16" Grid.Column="1" Grid.Row="1" d:LayoutOverrides="Height" Text="Active Character:" Foreground="White" VerticalAlignment="Center" />
-                        <StackPanel  Grid.Column="2" Margin="-50.083,0,8,0" Orientation="Horizontal"  >
-                            <TextBlock x:Name="CurrentPlayerText"  Text="{Binding CurrentCharacter.Name}" FontSize="16" d:LayoutOverrides="Height, GridBox" TextTrimming="CharacterEllipsis" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" />
-                            <ListBox x:Name="CurrentPlayerConditions" ItemsSource="{Binding CurrentCharacter.Stats.ActiveConditions}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}" ItemTemplate="{DynamicResource ConditionMiniTemplate}" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemContainerStyle="{DynamicResource ListBoxItemStyle3}" ScrollViewer.VerticalScrollBarVisibility="Disabled" VerticalAlignment="Center"/>
-                        </StackPanel>
-                        <Rectangle Fill="{DynamicResource LightBackgroundBrush}" Margin="1,1,76.032,1" RadiusX="5" RadiusY="5" Grid.Column="3" Grid.Row="1"/>
-                        <Rectangle Margin="4,3.54,78.032,3" RadiusX="6" RadiusY="6" Grid.Column="3" Grid.Row="1" Fill="{DynamicResource DarkBackgroundBrush}"/>
-                        <TextBlock x:Name="CurrentRoundText" Margin="61.943,3.54,0,4.18" FontSize="16" Grid.Column="3" Grid.Row="1" TextTrimming="CharacterEllipsis" Foreground="White" d:LayoutOverrides="Height" Text="{Binding Round}" HorizontalAlignment="Left" Width="43.858" TextAlignment="Center" VerticalAlignment="Center" />
-                        <TextBlock HorizontalAlignment="Left" Margin="8,3.54,0,4.18" TextWrapping="Wrap" FontSize="16" Grid.Column="3" Grid.Row="1" Text="Round:" Foreground="White" d:LayoutOverrides="Height" VerticalAlignment="Center" />
-                        <Button x:Name="ResetRoundButton" ToolTip="Reset Round" Margin="109.801,5.02,0,4.02" Grid.Column="3" Grid.Row="1"  Click="ResetRoundButton_Click" Content="Reset" HorizontalAlignment="Left" Padding="1,0" RenderTransformOrigin="0.76,0.226" d:LayoutOverrides="Height" Foreground="White" Width="40.167" Style="{DynamicResource ButtonSecondaryStyle}" />
-                    </Grid>
+        										</Button>
+        										<Border Margin="0" Background="{DynamicResource PrimaryColorGradientBrush}" Height="24.372" VerticalAlignment="Bottom">
+        											<CheckBox x:Name="RollHPCheck" Margin="4,0,0,0" d:LayoutOverrides="Height" HorizontalAlignment="Left" IsChecked="True" Checked="RollHPCheck_Checked" Unchecked="RollHPCheck_Unchecked" VerticalAlignment="Center">
+        												<TextBlock Text="Roll Monster HP" Foreground="White"/>
+        											</CheckBox>
+        										</Border>
+        									</Grid>
+        								</AvalonDock:DockableContent>
+        							</AvalonDock:DockablePane>
+        						</AvalonDock:ResizingPanel>
+        					</AvalonDock:ResizingPanel>
+        				</AvalonDock:DockingManager>
+        			</Grid>
+        			<Grid Grid.Column="0" Margin="0,0,0,0" Grid.Row="1" Grid.ColumnSpan="7">
+        				<Grid.ColumnDefinitions>
+        					<ColumnDefinition Width="0"/>
+        					<ColumnDefinition Width="190"/>
+        					<ColumnDefinition Width="230"/>
+        					<ColumnDefinition Width="230"/>
+        					<ColumnDefinition/>
+        					<ColumnDefinition Width="0"/>
+        				</Grid.ColumnDefinitions>
+        				<Rectangle Fill="{DynamicResource LightBackgroundBrush}" Margin="1" RadiusX="5" RadiusY="5" Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="1"/>
+        				<Rectangle Margin="4,3.54,4,3" RadiusX="6" RadiusY="6" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2" Fill="{DynamicResource DarkBackgroundBrush}"/>
+        				<TextBlock HorizontalAlignment="Left" Margin="8,0,0,0" TextWrapping="Wrap" FontSize="16" Grid.Column="1" Grid.Row="1" d:LayoutOverrides="Height" Text="Active Character:" Foreground="White" VerticalAlignment="Center" />
+        				<StackPanel  Grid.Column="2" Margin="-50.083,0,8,0" Orientation="Horizontal"  >
+        					<TextBlock x:Name="CurrentPlayerText"  Text="{Binding CurrentCharacter.Name}" FontSize="16" d:LayoutOverrides="Height, GridBox" TextTrimming="CharacterEllipsis" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Center" />
+        	        	     <ListBox x:Name="CurrentPlayerConditions" ItemsSource="{Binding CurrentCharacter.Stats.ActiveConditions}" ItemsPanel="{DynamicResource ItemsPanelTemplate1}" ItemTemplate="{DynamicResource ConditionMiniTemplate}" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="{x:Null}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ItemContainerStyle="{DynamicResource ListBoxItemStyle3}" ScrollViewer.VerticalScrollBarVisibility="Disabled" VerticalAlignment="Center"/>
+        				</StackPanel>
+        				<Rectangle Fill="{DynamicResource LightBackgroundBrush}" Margin="1,1,76.032,1" RadiusX="5" RadiusY="5" Grid.Column="3" Grid.Row="1"/>
+        				<Rectangle Margin="4,3.54,78.032,3" RadiusX="6" RadiusY="6" Grid.Column="3" Grid.Row="1" Fill="{DynamicResource DarkBackgroundBrush}"/>
+        				<TextBlock x:Name="CurrentRoundText" Margin="61.943,3.54,0,4.18" FontSize="16" Grid.Column="3" Grid.Row="1" TextTrimming="CharacterEllipsis" Foreground="White" d:LayoutOverrides="Height" Text="{Binding Round}" HorizontalAlignment="Left" Width="43.858" TextAlignment="Center" VerticalAlignment="Center" />
+        				<TextBlock HorizontalAlignment="Left" Margin="8,3.54,0,4.18" TextWrapping="Wrap" FontSize="16" Grid.Column="3" Grid.Row="1" Text="Round:" Foreground="White" d:LayoutOverrides="Height" VerticalAlignment="Center" />
+        				<Button x:Name="ResetRoundButton" ToolTip="Reset Round" Margin="109.801,5.02,0,4.02" Grid.Column="3" Grid.Row="1"  Click="ResetRoundButton_Click" Content="Reset" HorizontalAlignment="Left" Padding="1,0" RenderTransformOrigin="0.76,0.226" d:LayoutOverrides="Height" Foreground="White" Width="40.167" Style="{DynamicResource ButtonSecondaryStyle}" />
+        			</Grid>
+            		
+        		</Grid>
+        	</TabItem>
+        	<TabItem x:Name="FeatsTab" IsSelected="True">
+        		<TabItem.Header>
+        			<StackPanel Orientation="Horizontal">
+        				<Image Width="16" Height="16" Source="Images\star-16.png" />
+        				<TextBlock Text="Feats" Margin="5,0,0,0" />
+        			</StackPanel>
+        		</TabItem.Header>
+        		<Grid>
+        			<Grid.RowDefinitions>
+        				<RowDefinition Height="29.912"/>
+        				<RowDefinition Height="156.851"/>
+        				<RowDefinition/>
+        			</Grid.RowDefinitions>
+        			<Grid.ColumnDefinitions>
+        				<ColumnDefinition Width="185.333"/>
+        				<ColumnDefinition Width="*"/>
+        			</Grid.ColumnDefinitions>
+        			<Rectangle Fill="{DynamicResource LightBackgroundBrush}" Margin="1,0" RadiusY="5" RadiusX="5" Grid.RowSpan="3" Stroke="White" StrokeThickness="0"/>
+        			<Rectangle Fill="{DynamicResource LightBackgroundBrush}" Margin="1,0" RadiusY="5" RadiusX="5" Grid.RowSpan="3" Stroke="White" StrokeThickness="0" Grid.Column="1"/>
+        			<ListBox x:Name="FeatListBox" Margin="1,0,1,8" ItemsSource="{Binding}" ItemTemplate="{DynamicResource DataTemplate2}" Grid.RowSpan="2" ScrollViewer.HorizontalScrollBarVisibility="Hidden" Grid.Row="1" BorderBrush="White" Background="White" Foreground="Black" />
+        			<FlowDocumentScrollViewer x:Name="FeatFlowDocument" Grid.Column="1" Margin="1,32.96,1,8" Background="White" VerticalScrollBarVisibility="Auto" Grid.RowSpan="2" Grid.Row="1" Foreground="Black">
+        				<FlowDocument Background="White" FontFamily="/CombatManager;component/Fonts/#Segoe UI" TextAlignment="Left" />
+        			</FlowDocumentScrollViewer>
+        			<TextBox Margin="8,5.04,31.28,0" TextWrapping="Wrap" x:Name="featFilterBox" VerticalAlignment="Top" TextChanged="featFilterBox_TextChanged" />
+        			<Button x:Name="ClearFeatText" HorizontalAlignment="Right" Margin="0,5.04,6,0" Width="23" RenderTransformOrigin="0.395,-0.152" Height="21.811" VerticalAlignment="Top" Click="ClearFeatText_Click">
+        				<Path Stretch="Fill" Stroke="Black" Data="M0,0 L1,1 M0,1 L1,0" StrokeThickness="3"  StrokeStartLineCap="Round" StrokeEndLineCap="Round" Height="14" Width="14"/>
+        			</Button>
+        			<ComboBox x:Name="FeatCustomFilterComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="34,3.912,0,4.088" Width="69" d:LayoutOverrides="Height" SelectionChanged="FeatTypeFilterComboBox_SelectionChanged">
+        				<ComboBoxItem x:Name="AllCustomFeatsItem" Content="All" IsSelected="True" />
+        				<ComboBoxItem x:Name="CustomFeatsItem" Content="Custom"/>
+        			</ComboBox>
+        			<ComboBox x:Name="FeatTypeFilterComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="107,3.912,0,4.088" Width="120" SelectionChanged="FeatTypeFilterComboBox_SelectionChanged" d:LayoutOverrides="Height">
+        				<ComboBoxItem x:Name="AllFeatsItem" Content="All Types" IsSelected="True" />
+        			</ComboBox>
+        			<Button x:Name="FeatsPrintButton" Grid.Column="1" HorizontalAlignment="Right" Margin="0,4,4.25,4" d:LayoutOverrides="Height" Click="FeatsPrintButton_Click">
+        				<Image Height="16" Source="Images/PrintHS.png" Stretch="Fill" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        			</Button>
+        			<Button x:Name="ResetFeatsFilterButton" Grid.Column="1" HorizontalAlignment="Left" Margin="8,3.912,0,0" VerticalAlignment="Top" Click="ResetFeatsFilterButton_Click">
+        				<Image Height="16" Source="Images/reset-16.png" Stretch="Fill" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+            		
+        			</Button>
+        			<Border BorderThickness="1" Grid.Column="1" Grid.Row="1" Background="{DynamicResource PrimaryColorGradientBrush}" Padding="0,2,0,1" Height="32.96" VerticalAlignment="Top">
+        				<Grid>
+        					<Button x:Name="CustomizeFeatButton" Content="Customize" HorizontalAlignment="Left" Margin="87,3,0,3" Width="75" d:LayoutOverrides="Height" Style="{DynamicResource ButtonMainStyle}" FontWeight="Bold" ToolTip="Create a new Custom Feat"
 
-                </Grid>
-            </TabItem>
-            <TabItem x:Name="FeatsTab" IsSelected="True">
-                <TabItem.Header>
-                    <StackPanel Orientation="Horizontal">
-                        <Image Width="16" Height="16" Source="Images\star-16.png" />
-                        <TextBlock Text="Feats" Margin="5,0,0,0" />
-                    </StackPanel>
-                </TabItem.Header>
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="29.912"/>
-                        <RowDefinition Height="156.851"/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="185.333"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Rectangle Fill="{DynamicResource LightBackgroundBrush}" Margin="1,0" RadiusY="5" RadiusX="5" Grid.RowSpan="3" Stroke="White" StrokeThickness="0"/>
-                    <Rectangle Fill="{DynamicResource LightBackgroundBrush}" Margin="1,0" RadiusY="5" RadiusX="5" Grid.RowSpan="3" Stroke="White" StrokeThickness="0" Grid.Column="1"/>
-                    <ListBox x:Name="FeatListBox" Margin="1,0,1,8" ItemsSource="{Binding}" ItemTemplate="{DynamicResource DataTemplate2}" Grid.RowSpan="2" ScrollViewer.HorizontalScrollBarVisibility="Hidden" Grid.Row="1" BorderBrush="White" Background="White" Foreground="Black" />
-                    <FlowDocumentScrollViewer x:Name="FeatFlowDocument" Grid.Column="1" Margin="1,32.96,1,8" Background="White" VerticalScrollBarVisibility="Auto" Grid.RowSpan="2" Grid.Row="1" Foreground="Black">
-                        <FlowDocument Background="White" FontFamily="/CombatManager;component/Fonts/#Segoe UI" TextAlignment="Left" />
-                    </FlowDocumentScrollViewer>
-                    <TextBox Margin="8,5.04,31.28,0" TextWrapping="Wrap" x:Name="featFilterBox" VerticalAlignment="Top" TextChanged="featFilterBox_TextChanged" />
-                    <Button x:Name="ClearFeatText" HorizontalAlignment="Right" Margin="0,5.04,6,0" Width="23" RenderTransformOrigin="0.395,-0.152" Height="21.811" VerticalAlignment="Top" Click="ClearFeatText_Click">
-                        <Path Stretch="Fill" Stroke="Black" Data="M0,0 L1,1 M0,1 L1,0" StrokeThickness="3"  StrokeStartLineCap="Round" StrokeEndLineCap="Round" Height="14" Width="14"/>
-                    </Button>
-                    <ComboBox x:Name="FeatCustomFilterComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="34,3.912,0,4.088" Width="69" d:LayoutOverrides="Height" SelectionChanged="FeatTypeFilterComboBox_SelectionChanged">
-                        <ComboBoxItem x:Name="AllCustomFeatsItem" Content="All" IsSelected="True" />
-                        <ComboBoxItem x:Name="CustomFeatsItem" Content="Custom"/>
-                    </ComboBox>
-                    <ComboBox x:Name="FeatTypeFilterComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="107,3.912,0,4.088" Width="120" SelectionChanged="FeatTypeFilterComboBox_SelectionChanged" d:LayoutOverrides="Height">
-                        <ComboBoxItem x:Name="AllFeatsItem" Content="All Types" IsSelected="True" />
-                    </ComboBox>
-                    <Button x:Name="FeatsPrintButton" Grid.Column="1" HorizontalAlignment="Right" Margin="0,4,4.25,4" d:LayoutOverrides="Height" Click="FeatsPrintButton_Click">
-                        <Image Height="16" Source="Images/PrintHS.png" Stretch="Fill" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                    </Button>
-                    <Button x:Name="ResetFeatsFilterButton" Grid.Column="1" HorizontalAlignment="Left" Margin="8,3.912,0,0" VerticalAlignment="Top" Click="ResetFeatsFilterButton_Click">
-                        <Image Height="16" Source="Images/reset-16.png" Stretch="Fill" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-
-                    </Button>
-                    <Border BorderThickness="1" Grid.Column="1" Grid.Row="1" Background="{DynamicResource PrimaryColorGradientBrush}" Padding="0,2,0,1" Height="32.96" VerticalAlignment="Top">
-                        <Grid>
-                            <Button x:Name="CustomizeFeatButton" Content="Customize" HorizontalAlignment="Left" Margin="87,3,0,3" Width="75" d:LayoutOverrides="Height" Style="{DynamicResource ButtonMainStyle}" FontWeight="Bold" ToolTip="Create a new Custom Feat"
+                                    
+                                    
         						IsEnabled="{Binding Converter={StaticResource itemExistsConverter}}" Click="CustomizeFeatButton_Click" />
 
                             <Button x:Name="DeleteCustomFeatButton" Content="Delete" HorizontalAlignment="Right" Margin="0,3,4,3" Width="75" d:LayoutOverrides="Height" Background="{DynamicResource SecondaryColorBGradientBrush}" Foreground="White" FontWeight="Bold"
@@ -3804,7 +3810,6 @@
                         <TextBlock Text="Name Generator" Margin="5,0,0,0" />
                     </StackPanel>
                 </TabItem.Header>
-                
                 <Grid x:Name="NamesTabGrid">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="30"/>
@@ -3822,7 +3827,7 @@
                     </Button>
                     <ComboBox x:Name="NameTypeFilterComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="34,4,0,4"  d:LayoutOverrides="Height" SelectionChanged="NameTypeFilterComboBox_SelectionChanged" Width="173" />
                     <ComboBox x:Name="NameSecondFilterComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="211,4,0,4" d:LayoutOverrides="Height" SelectionChanged="NameSecondFilterComboBox_SelectionChanged" Width="131"/>
-                    
+
                     <Button x:Name="NameGenerate" Grid.Column="1" HorizontalAlignment="Left" Margin="350,4,0,0" VerticalAlignment="Top" Click="NameGenerate_Click">
                         <Image Height="16" Source="Images/book-16.png" Stretch="Fill" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                     </Button>
@@ -3830,25 +3835,30 @@
                     <Button x:Name="NamePrintButton" Grid.Column="1" HorizontalAlignment="Right" Margin="0,4,4.25,4" d:LayoutOverrides="Height" Click="NamePrintButton_Click">
                         <Image Height="16" Source="Images/PrintHS.png" Stretch="Fill" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                     </Button>
-                    
+
                     <FlowDocumentScrollViewer x:Name="NameFlowDocument" Grid.Column="1" Margin="1,32.96,1,8" Background="White" VerticalScrollBarVisibility="Disabled" Grid.RowSpan="4" Grid.Row="0" Foreground="Black">
                         <FlowDocument Background="White" FontFamily="/CombatManager;component/Fonts/#Segoe UI" TextAlignment="Left">
                             <Paragraph x:Name="NameParagraph">
                                 <TextBlock x:Name="NameTextBlock"/>
                             </Paragraph>
-                         </FlowDocument>
+                        </FlowDocument>
                     </FlowDocumentScrollViewer>
 
                 </Grid>
             </TabItem>
-            
-            <TabItem x:Name="CalendarTab" IsSelected="True" Visibility="Hidden">
-                <TabItem.Header>
-                    <StackPanel Orientation="Horizontal">
-                        <Image Width="16" Height="16" Source="Images\clock-16.png" />
-                        <TextBlock Text="Calendar" Margin="5,0,0,0" />
-                    </StackPanel>
-                </TabItem.Header>
+
+
+
+
+            <TabItem x:Name="CalendarTab" Visibility="Hidden">
+        		<TabItem.Header>
+        			<StackPanel Orientation="Horizontal">
+        				<Image Width="16" Height="16" Source="Images\clock-16.png" />
+        				<TextBlock Text="Calendar" Margin="5,0,0,0" />
+        			</StackPanel>
+        		</TabItem.Header>
+
+                
                 <Border Background="{StaticResource LightBackgroundBrush}" CornerRadius="6">
                     <Grid Margin="0,0,0,8">
                         <Grid.RowDefinitions>
@@ -3913,8 +3923,47 @@
                     </Grid>
                 </Border>
             </TabItem>
+            <TabItem x:Name="WeatherTab" Visibility="Hidden">
+                <TabItem.Header>
+                    <StackPanel Orientation="Horizontal">
+                        <Image Width="16" Height="16" Source="Images\lightning-16.png" />
+                        <TextBlock Text="Weather Generator" Margin="5,0,0,0" />
+                       
+                    </StackPanel>
+                </TabItem.Header>
+                <Grid x:Name="WeatherTabGrid">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30" />
+                        <RowDefinition/>
+                        <RowDefinition Height="Auto" MinHeight="32"/>
+                        <RowDefinition Height="6"/>
+                        
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="185" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    
+                    <Button x:Name="ResetWeatherButton" Grid.Column="1" HorizontalAlignment="Left" Margin="0,4,0,0" VerticalAlignment="Top" Click="ResetWeather_Click">
+                        <Image Height="16" Source="Images/reset-16.png" Stretch="Fill" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Button>
+                    <ComboBox x:Name="WeatherClimateFilterComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="24,4,0,4"  d:LayoutOverrides="Height" SelectionChanged="WeatherClimateFilterComboBox_SelectionChanged" Width="173" />
+                    <ComboBox x:Name="WeatherSeasonFilterComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="200,4,0,4" d:LayoutOverrides="Height" SelectionChanged="WeatherSeasonFilterComboBox_SelectionChanged" Width="131"/>
 
+                    <Button x:Name="WeatherGenerate" Grid.Column="1" HorizontalAlignment="Left" Margin="350,4,0,0" VerticalAlignment="Top" Click="WeatherGenerate_Click">
+                        <Image Height="16" Source="Images/lightning-16.png" Stretch="Fill" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Button>
 
+                    <Button x:Name="WeatherPrintButton" Grid.Column="1" HorizontalAlignment="Right" Margin="0,4,4,4" d:LayoutOverrides="Height" Click="WeatherPrintButton_Click">
+                        <Image Height="16" Source="Images/PrintHS.png" Stretch="Fill" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                    </Button>
+
+                    <FlowDocumentScrollViewer x:Name="WeatherFlowDocument" Grid.Column="1" Margin="1,33,1,8" Background="White" VerticalScrollBarVisibility="Disabled" Grid.RowSpan="4" Grid.Row="0" Foreground="Black">
+                        <FlowDocument Background="White" FontFamily="/CombatManager;component/Fonts/#Segoe UI" TextAlignment="Left"/>
+                    </FlowDocumentScrollViewer>
+
+                </Grid>
+            </TabItem>
         </TabControl>
         <Button x:Name="OGL_Button" Content="OGL" HorizontalAlignment="Left" Margin="15,4,0,8.168" Grid.Row="2" d:LayoutOverrides="Height" Width="30" Click="OGL_Button_Click" Style="{DynamicResource ButtonMainStyle}" FontSize="10.667"/>
         <Thumb x:Name="BottomThumb" Height="4.168" Margin="8.667,0,9,0" Grid.Row="2" VerticalAlignment="Bottom" DragDelta="BottomThumb_DragDelta" Cursor="SizeNS" Style="{DynamicResource ThumbStyle3}" />

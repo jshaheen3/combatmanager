@@ -19,30 +19,16 @@
  *
  */
 
-﻿using System;
-using System.Data;
+using System;
 using System.ComponentModel;
-using System.Collections.ObjectModel;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
-using WinInterop = System.Windows.Interop;
-using System.Runtime.InteropServices;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Xml.Serialization;
-using Microsoft.Win32;
 
 namespace CombatManager
 {
@@ -52,17 +38,12 @@ namespace CombatManager
     public partial class ConditionSelector : Window
     {
 		private ICollectionView conditionView;
-
         private Condition visibleCondition;
-
         private bool loadedDuration;
-
         private InitiativeCount _InitiativeCount;
-
         private List<Character> characters;
-
         private List<Condition> conditionList;
-		
+
         public ConditionSelector()
         {
             InitializeComponent();
@@ -70,35 +51,28 @@ namespace CombatManager
             conditionList = new List<Condition>();
             conditionList.AddRange(Condition.Conditions);
             conditionList.AddRange(Condition.CustomConditions);
-
             conditionList.Sort((a, b) => String.Compare(a.Name, b.Name, true));
-            
 
             conditionView = new ListCollectionView(conditionList);
-
             conditionView.CurrentChanged += new EventHandler(ConditionView_CurrentChanged);
             conditionView.Filter += new Predicate<object>(ConditionViewFilter);
             conditionView.SortDescriptions.Add(new SortDescription("Name", ListSortDirection.Ascending));
 
             ConditionsListBox.DataContext = conditionView;
 
-
             UpdatePageSelection();
             UpdateConditionDisplay();
-
         }
 
         bool ConditionViewFilter(object ob)
         {
             Condition c = (Condition)ob;
-
             return ConditionViewTypeFilter(c) && ConditionViewTextFilter(c);
         }
 
 
         bool ConditionViewTextFilter(Condition c)
         {
-
             if (ConditionFilterText.Text == null || ConditionFilterText.Text.Length == 0)
             {
                 return true;
@@ -117,12 +91,12 @@ namespace CombatManager
 			bool showingConditions = ConditionsRadioButton.IsChecked == true;
 			bool showingAfflictions = AfflictionsRadioButton.IsChecked == true;
             bool showingCustom = CustomRadioButton.IsChecked == true;
-            bool showingFavorites = FavoritesRadioButton.IsChecked == true ;
+            bool showingFavorites = FavoritesRadioButton.IsChecked == true;
+            bool showingFeats = FeatsRadioButton.IsChecked == true;
 
             if (showingFavorites)
             {
-                return Condition.FavoriteConditions.FirstOrDefault(a => String.Compare(a.Name, c.Name, true ) == 0
-                    && a.Type == c.Type) != null;                      
+                return Condition.FavoriteConditions.FirstOrDefault(a => String.Compare(a.Name, c.Name, true ) == 0 && a.Type == c.Type) != null;                      
             }
             else if (c.Custom)
             {
@@ -136,6 +110,10 @@ namespace CombatManager
 			{
 				return showingAfflictions;
 			}
+            else if (c.Feat != null)
+            {
+                return showingFeats;
+            }
 			else
 			{
 				return showingConditions;
@@ -146,30 +124,21 @@ namespace CombatManager
         {
             Condition c = (Condition)conditionView.CurrentItem;            
 
-
             if (c != visibleCondition)
             {
-
                 visibleCondition = c;
-
                 if (c != null)
                 {
-                    
-
                     ConditionDocument.Blocks.Clear();
-
-
                     if (c != null)
                     {
                         if (c.Spell != null)
                         {
                             SpellBlockCreator cs = new SpellBlockCreator(ConditionDocument, null);
                             ConditionDocument.Blocks.AddRange(cs.CreateBlocks(c.Spell, true, true));
-
                         }
                         else if (c.Affliction != null)
                         {
-
                             Paragraph p = new Paragraph();
                             p.Inlines.Add(new Bold(new Run(c.Name)));
                             p.Inlines.Add(new LineBreak());
@@ -181,9 +150,21 @@ namespace CombatManager
 
                             ConditionDocument.Blocks.Add(p);
                         }
+                        else if (c.Feat != null)
+                        {
+                            Paragraph p = new Paragraph();
+                            p.Inlines.Add(new Bold(new Run(c.Name)));
+                            p.Inlines.Add(new LineBreak());
+                            p.Inlines.Add(new Run(c.Feat.Benefit));
+                            p.TextAlignment = TextAlignment.Left;
+                            Thickness m = p.Margin;
+                            m.Bottom = 0;
+                            p.Margin = m;
+
+                            ConditionDocument.Blocks.Add(p);
+                        }
                         else
                         {
-
                             Paragraph p = new Paragraph();
                             p.Inlines.Add(new Bold(new Run(c.Name)));
                             p.Inlines.Add(new LineBreak());
@@ -196,16 +177,10 @@ namespace CombatManager
                             ConditionDocument.Blocks.Add(p);
                         }
                     }
-
-                    
                 }
-                
             }
         }
-
-
-
-
+        
         void ConditionView_CurrentChanged(object sender, EventArgs e)
         {
             UpdateConditionDisplay();
@@ -257,23 +232,16 @@ namespace CombatManager
             {
                 foreach (Character ch in characters)
                 {
-
-                    
                     Condition c = (Condition)conditionView.CurrentItem;
 
                     if (c != null)
                     {
-
                         ac = new ActiveCondition();
-
                         ac.Condition = c;
-
                     }
                    
                     if (ac != null)
                     {
-
-
                         if (this.RoundsRadioButton.IsChecked == true)
                         {
                             int val;
@@ -288,14 +256,11 @@ namespace CombatManager
                         }
 
                         ac.InitiativeCount = InitiativeCount;
-
                         ac.Details = DetailsTextBox.Text;
-
                         ch.Stats.AddCondition(ac);
                         Condition.PushRecentCondition(ac.Condition);
                     }
                 }
-
 
                 DialogResult = true;
                 Close();
@@ -309,31 +274,18 @@ namespace CombatManager
 
         private void UpdatePageSelection()
         {
-            if (ConditionFlowDocumentViewer != null && FavoritesRadioButton != null
-    && ConditionsRadioButton != null
-    && SpellsRadioButton != null
-    && AfflictionsRadioButton != null
-    && AddToFavoritesButton != null)
+            if ( ConditionFlowDocumentViewer != null &&  FavoritesRadioButton != null &&  ConditionsRadioButton != null && 
+                 SpellsRadioButton != null && AfflictionsRadioButton != null &&  AddToFavoritesButton != null && FeatsRadioButton != null)
             {
-                bool showingCustom =
-                    (CustomRadioButton.IsChecked == true);
+                bool showingCustom = (CustomRadioButton.IsChecked == true);
+                bool showingFavorites = (FavoritesRadioButton.IsChecked == true);
 
-                bool showingFavorites =
-                    (FavoritesRadioButton.IsChecked == true);
-
-
-                CustomControlsGrid.Visibility =
-                    showingCustom ? Visibility.Visible : Visibility.Collapsed;
-
-
-                AddToFavoritesButton.Content =
-                    !showingFavorites ? "Add to Favorites" : "Remove from Favorites";
+                CustomControlsGrid.Visibility = showingCustom ? Visibility.Visible : Visibility.Collapsed;
+                AddToFavoritesButton.Content = !showingFavorites ? "Add to Favorites" : "Remove from Favorites";
 
                 if (conditionView != null)
                 {
                     conditionView.Refresh();
-
-
                     if (conditionView.CurrentItem == null)
                     {
                         conditionView.MoveCurrentToFirst();
@@ -368,7 +320,6 @@ namespace CombatManager
             {
                 RoundsRadioButton.IsChecked = true;
             }
-            
         }
 
         private void Border_MouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -451,9 +402,7 @@ namespace CombatManager
         private void AddToFavorites(Condition c)
         {
 
-            if (Condition.FavoriteConditions.FirstOrDefault(
-                a => (String.Compare(a.Name, c.Name, true) == 0) &&
-                    (a.Type == c.Type)) == null)
+            if (Condition.FavoriteConditions.FirstOrDefault(a => (String.Compare(a.Name, c.Name, true) == 0) && (a.Type == c.Type)) == null)
             {
                 Condition.FavoriteConditions.Add(new FavoriteCondition(c));
                 Condition.FavoriteConditions.Sort((a, b) => String.Compare(a.Name, b.Name, true));
@@ -464,8 +413,7 @@ namespace CombatManager
         private void DeleteFromFavorites(Condition c)
         {
 
-            Condition.FavoriteConditions.RemoveAll(a => String.Compare(a.Name, c.Name, true) == 0
-                                 && a.Type == c.Type);
+            Condition.FavoriteConditions.RemoveAll(a => String.Compare(a.Name, c.Name, true) == 0 && a.Type == c.Type);
             Condition.SaveFavoriteConditions();
             conditionView.Refresh();
         }
@@ -478,9 +426,7 @@ namespace CombatManager
         private void Grid_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
             FrameworkElement el = (FrameworkElement)sender;
-
             Button delete = (Button)LogicalTreeHelper.FindLogicalNode(el, "DeleteButton");
-
             Condition c = (Condition)el.DataContext;
 
             if (CustomRadioButton.IsChecked == true || FavoritesRadioButton.IsChecked == true)
@@ -499,7 +445,6 @@ namespace CombatManager
              if (c != null)
              {
                  CustomConditionDialog dlg = new CustomConditionDialog();
-
 
                  dlg.Condition = c;
                  dlg.Owner = this;
@@ -531,7 +476,9 @@ namespace CombatManager
             }
         }
 
-
-
+        private void ConditionsFeatButton_Checked(object sender, RoutedEventArgs e)
+        {
+            UpdatePageSelection();
+        }
     }
 }
