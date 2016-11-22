@@ -89,6 +89,7 @@
     <Compile Include="monster.cs" />
     <Compile Include="MonsterDB.cs" />
     <Compile Include="MonsterHtmlCreator.cs" />
+    <Compile Include="NameGenerator.cs" />
     <Compile Include="ParsedFeat.cs" />
     <Compile Include="Pathfinder.Herolab.Serializable.class.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
