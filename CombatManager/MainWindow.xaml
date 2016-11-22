@@ -2587,7 +2587,7 @@
         				<TextBlock Text="Combat"/>
         			</StackPanel>
         		</TabItem.Header>
-        		<Grid Margin="0,0,0,0" d:LayoutOverrides="VerticalMargin" >
+        		<Grid Margin="0,0,0,0">
         			<Grid.RowDefinitions>
         				<RowDefinition Height="0"/>
         				<RowDefinition Height="35
@@ -3022,7 +3022,8 @@
         													</Path.Effect>
         												</Path>
         												<TextBlock Text="Add" Margin="6,0,7,0" HorizontalAlignment="Left"/>
-        											</StackPanel>
+                                                        <TextBox x:Name="MonsterNumberMonsters" VerticalAlignment="Top" KeyDown="monsterAddTextBox_KeyDown" MinWidth="25" Text="1"/>
+                                                    </StackPanel>
         										</Button>
         										<Border Margin="0" Background="{DynamicResource PrimaryColorGradientBrush}" Height="24.372" VerticalAlignment="Bottom">
         											<CheckBox x:Name="RollHPCheck" Margin="4,0,0,0" d:LayoutOverrides="Height" HorizontalAlignment="Left" IsChecked="True" Checked="RollHPCheck_Checked" Unchecked="RollHPCheck_Unchecked" VerticalAlignment="Center">

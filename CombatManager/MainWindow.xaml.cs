@@ -3974,11 +3974,20 @@ namespace CombatManager
 
         private void AddMonsterFromListButton_Click(object sender, RoutedEventArgs e)
         {
+            int number = Convert.ToInt32(MonsterNumberMonsters.Text);
+            // Clamp between 1 and 10
+            number = Math.Min(Math.Max(1, number), 10);
+
+            // Add number of Monsters
             using (var undoGroup = undo.CreateUndoGroup())
             {
-                AddCurrentDBViewMonster();
+                for (int i = 1; i <= number; i++)
+                {
+                    AddCurrentDBViewMonster();
+                }
             }
             SaveCombatState();
+            MonsterNumberMonsters.Text = "1";
         }
 
         private void SourcesButton_Click(object sender, System.Windows.RoutedEventArgs e)
@@ -4260,6 +4269,17 @@ namespace CombatManager
                 {
                     AddCurrentDBViewMonster();
                 }
+            }
+        }
+
+        private void monsterAddTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter && !e.IsRepeat)
+            {
+                if (Convert.ToInt32(MonsterNumberMonsters.Text) > 10)
+                    MonsterNumberMonsters.Text = "10";
+                if (Convert.ToInt32(MonsterNumberMonsters.Text) < 1)
+                    MonsterNumberMonsters.Text = "1";
             }
         }
 
