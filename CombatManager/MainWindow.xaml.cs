@@ -3974,10 +3974,8 @@ namespace CombatManager
 
         private void AddMonsterFromListButton_Click(object sender, RoutedEventArgs e)
         {
-            int number = Convert.ToInt32(MonsterNumberMonsters.Text);
-            // Clamp between 1 and 10
-            number = Math.Min(Math.Max(1, number), 10);
-
+            int number = ValidateMonsterDBAddNumber();
+            
             // Add number of Monsters
             using (var undoGroup = undo.CreateUndoGroup())
             {
@@ -4276,11 +4274,30 @@ namespace CombatManager
         {
             if (e.Key == Key.Enter && !e.IsRepeat)
             {
-                if (Convert.ToInt32(MonsterNumberMonsters.Text) > 10)
-                    MonsterNumberMonsters.Text = "10";
-                if (Convert.ToInt32(MonsterNumberMonsters.Text) < 1)
-                    MonsterNumberMonsters.Text = "1";
+                ValidateMonsterDBAddNumber();
             }
+        }
+
+        private int ValidateMonsterDBAddNumber()
+        {
+            int number;
+
+            // Make sure they entered a valid number
+            try
+            {
+                number = Convert.ToInt32(MonsterNumberMonsters.Text);
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine("An error occurred in MonsterDBAddNumber: '{0}' '{1}'", exc, MonsterNumberMonsters.Text);
+                MonsterNumberMonsters.Text = "1";
+                number = 1;
+            }
+
+            // Clamp between 1 and 10
+            number = Math.Min(Math.Max(1, number), 10);
+            MonsterNumberMonsters.Text = number.ToString();
+            return number;
         }
 
         private void TextBox_GotKeyboardFocus(object sender, System.Windows.Input.KeyboardFocusChangedEventArgs e)
