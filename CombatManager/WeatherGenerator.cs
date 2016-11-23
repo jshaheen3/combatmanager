@@ -9,7 +9,7 @@ namespace CombatManager
 {
     public class WeatherGenerator
     {
-        // Created from http://www.d20pfsrd.com/gamemastering/environment/weather
+        // Tables in this file were based on http://www.d20pfsrd.com/gamemastering/environment/weather
         
         private Random rnd;
         private WeatherBlockCreator wb;
@@ -54,8 +54,7 @@ namespace CombatManager
                 filterComboBox.Items.Add(bi);
             }
         }
-
- 
+        
         public void Update(FlowDocument document, int cl, int sea, int num = 1)
         {
             Climate climate = (Climate)cl;
@@ -125,15 +124,6 @@ namespace CombatManager
 
         private void TemperatePowerfulStorm(Season season)
         {
-            /*
-             * Very high winds and torrential precipitation reduce visibility to zero, making Perception checks and all ranged weapon attacks impossible. 
-             * Unprotected flames are automatically extinguished, and protected flames have a 75% chance of being doused. 
-             * Creatures caught in the area must make a Fortitude save or face the effects based on the size of the creature (see Table: Wind Effects). 
-             * Powerful storms are divided into the following four types.
-            */
-
-            // TODO: Finish this section
-
             high = getTempBySeason(season);
             low = high - rnd.Next(10, 20 + 1);
 
@@ -148,8 +138,10 @@ namespace CombatManager
 
                 case Season.Spring:
                     wb.AddBoldBlock("Windstorm");
-                    //1d6 hours
                     wb.AddTempWind(high, low, wind);
+                    int hours = rnd.Next(6) + 1;
+                    string txt = "The windstorm last " + hours + ((hours == 1) ? " hour.\n" : " hours.\n");
+                    wb.AddBlock(txt);
                     WindStormWinds();
                     break;
 
@@ -157,16 +149,17 @@ namespace CombatManager
                     wb.AddBoldBlock("Hurricane");
                     wind = rnd.Next(75, 174 + 1);
                     wb.AddTempWind(high, low, wind);
-                    //  Hurricane: In addition to very high winds and heavy rain, hurricanes are accompanied by floods. Most adventuring activity is impossible under such conditions.
-                    //Hurricanes can last for up to a week, but their major impact on characters comes in a 24 - to - 48 - hour period when the center of the storm moves through their area.
+                    wb.AddBlock("Hurricanes can last for up to a week, but their major impact on characters comes in a 24 - to - 48 - hour period when the center of the storm moves through their area.");
+                    wb.AddBlock("In addition to very high winds and heavy rain, hurricanes are accompanied by floods. Most adventuring activity is impossible under such conditions.\n");
+                    wb.AddBlock("The heavy rain reduces visibility ranges by three-quarters, resulting in a –8 penalty on perception checks. ");
                     WindHurricane();
                     break;
 
                 case Season.Autumn:
-                    wb.AddBoldBlock("Tornado");
-                    // Tornadoes are very short-lived(1d6 × 10 minutes), typically forming as part of a thunderstorm system.
+                    wb.AddBoldBlock("Thunderstorm with Tornado");
                     wind = rnd.Next(175, 300 + 1);
                     wb.AddTempWind(high, low, wind);
+                    WeatherThunderStorm(false);
                     Tornado();
                     break;
             }
@@ -188,7 +181,7 @@ namespace CombatManager
             {
                 wb.AddBoldBlock("Thunderstorm");
                 wb.AddTempWind(high, low, wind);
-                WeatherThunderStorm();
+                WeatherThunderStorm(true);
 
                 int tornado = rnd.Next(1, 10 + 1);
                 if (tornado <= 1)
@@ -270,7 +263,7 @@ namespace CombatManager
             WindCheckedSize("medium", "small", -8);
         }
 
-        private void WeatherThunderStorm()
+        private void WeatherThunderStorm(Boolean showinfo)
         { 
             int time = rnd.Next(1, 4 + 1) + rnd.Next(1, 4 + 1);
             string txt = "";
@@ -279,7 +272,8 @@ namespace CombatManager
             txt += "The heavy rain reduces visibility ranges by three-quarters, resulting in a –8 penalty on perception checks. ";
             wb.AddBlock(txt);
             WeatherLightning();
-            WindStormWinds();
+            if (showinfo)
+                WindStormWinds();
         }
 
         private void WeatherRain()
@@ -390,8 +384,7 @@ namespace CombatManager
             else
                 DesertDownpour(high, low);
         }
-
-  
+        
         private void DesertDownpour(int high, int low)
         {
             string txt = "";
@@ -399,7 +392,6 @@ namespace CombatManager
             wind = rnd.Next(10, 30 + 1);
 
             wb.AddTempWind(high, low, wind);
-
             int time = rnd.Next(1, 4 + 1) + rnd.Next(1, 4 + 1);
 
             txt += "The downpour lasts for " + time + ((time == 1) ? " hour." : " hours.") + "\n";
@@ -477,8 +469,7 @@ namespace CombatManager
             wb.AddBlock("In addition to automatically extinguishing any unprotected flames, winds of this magnitude cause protected flames (such as those of lanterns) to dance wildly and have a 50% chance of extinguishing these lights. Ranged weapon attacks and perception checks are at a –4 penalty. This is the velocity of wind produced by a gust of wind spell.");
             WindCheckedSize("small", "tiny", -4);
         }
-
-
+        
         private void WindStormWinds()
         {
             wb.AddBlock("Powerful enough to bring down branches if not whole trees, windstorms automatically extinguish unprotected flames and have a 75% chance of blowing out protected flames, such as those of lanterns. Ranged weapon attacks are impossible, and even siege weapons have a –4 penalty on attack rolls. Perception checks that rely on sound are at a –8 penalty due to the howling of the wind.");
@@ -493,6 +484,10 @@ namespace CombatManager
 
         private void Tornado()
         {
+            int time = (rnd.Next(6) + 1) * 10;
+            string txt = "";
+            txt += "Heavy thunderstorm in the area with a tornado that lasts " + time + " minutes.\n";
+            wb.AddBlock(txt);
             wb.AddBlock("Tornado (CR 10): All flames are extinguished. All ranged attacks are impossible (even with siege weapons), as are sound-based perception checks. Instead of being blown away, characters in close proximity to a tornado who fail their Fortitude saves are sucked toward the tornado. Those who come in contact with the actual funnel cloud are picked up and whirled around for 1d10 rounds, taking 6d6 points of damage per round, before being violently expelled (falling damage might apply). While a tornado's rotational speed can be as great as 300 mph, the funnel itself moves forward at an average of 30 mph (roughly 250 feet per round). A tornado uproots trees, destroys buildings, and causes similar forms of major destruction.");
         }
 
@@ -601,8 +596,7 @@ namespace CombatManager
             wb.AddBoldBlock("Normal Weather");
             wb.AddTempWind(high, low, wind);
         }
-
-     
+        
 
         private class WeatherBlockCreator : BlockCreator
         {
@@ -657,6 +651,7 @@ namespace CombatManager
                 blocks.Add(details);
             }
 
+            // Add any text to block and will hyperlink in keywords from list below from the rules
             public void AddBlock(string txt)
             {
                 Span s = new Span();
@@ -714,6 +709,7 @@ namespace CombatManager
                 return link;
             }
 
+            // Method to Create a Document block for Temp and Wind
             public void AddTempWind(int high, int low, int wind)
             {
                 string txt = "";
