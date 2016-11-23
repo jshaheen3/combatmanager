@@ -70,7 +70,8 @@ namespace CombatManager
         private bool _StrZero; 
         private bool _DexZero; 
         private bool _PowerAttack;
-
+        private bool _DeadlyAim;
+        private bool _CombatExpertise;
 
 
 
@@ -118,6 +119,8 @@ namespace CombatManager
             _StrZero = bonus._StrZero;
             _DexZero = bonus._DexZero;
             _PowerAttack = bonus._PowerAttack;
+            _DeadlyAim = bonus._DeadlyAim;
+            _CombatExpertise = bonus._CombatExpertise;
         }
 
 
@@ -560,6 +563,32 @@ namespace CombatManager
                 {
                     _PowerAttack = value;
                     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("PowerAttack"));
+                }
+            }
+        }
+
+        public bool DeadlyAim
+        {
+            get { return _DeadlyAim; }
+            set
+            {
+                if (_DeadlyAim != value)
+                {
+                    _DeadlyAim = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("DeadlyAim"));
+                }
+            }
+        }
+
+        public bool CombatExpertise
+        {
+            get { return _CombatExpertise; }
+            set
+            {
+                if (_CombatExpertise != value)
+                {
+                    _CombatExpertise = value;
+                    PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("CombatExpertise"));
                 }
             }
         }
