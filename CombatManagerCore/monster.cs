@@ -389,7 +389,9 @@ namespace CombatManager {
         private bool _StrZero;
         private int? _PreLossStr;
         private bool _PowerAttack;
-
+        private bool _DeadlyAim;
+        private bool _CombatExpertise;
+        
         private int _DBLoaderID;
 
         private int _DetailsID;
@@ -6076,15 +6078,35 @@ namespace CombatManager {
             if (bonus.PowerAttack)
             {
                 PowerAttack = !remove;
-
                 int ab = -1 - (baseAtk / 4);
                 int db = 2 + (2 * (baseAtk / 4));
                 ab = remove ? -ab : ab;
                 db = remove ? -db : db;
-
                 Melee = ChangeAttackMods(Melee, ab);
                 Melee = ChangeAttackDamage(Melee, db, (int)(db * 1.5), (int)(db / 2));
             }
+            if (bonus.DeadlyAim)
+            {
+                DeadlyAim = !remove;
+                int ab = -1 - (baseAtk / 4);
+                int db = 2 + (2 * (baseAtk / 4));
+                ab = remove ? -ab : ab;
+                db = remove ? -db : db;
+                Ranged = ChangeAttackMods(Ranged, ab);
+                Ranged = ChangeAttackDamage(Ranged, db, (int)(db * 1.5), (int)(db / 2));
+            }
+            if (bonus.CombatExpertise)
+            {
+                CombatExpertise = !remove;
+                int ab = -1 - (baseAtk / 4);
+                int db = -ab;
+                ab = remove ? -ab : ab;
+                db = remove ? -db : db;
+                Melee = ChangeAttackMods(Melee, ab);
+                CMB_Numeric += ab;
+                AdjustDodge(db);
+            }
+
         }
 
         public static Stat StatFromName(string name) {
@@ -7505,6 +7527,41 @@ namespace CombatManager {
                 }
             }
         }
+
+        [XmlIgnore]
+        public bool DeadlyAim
+        {
+            get
+            {
+                return _DeadlyAim;
+            }
+            set
+            {
+                if (_DeadlyAim != value)
+                {
+                    _DeadlyAim = value;
+                    NotifyPropertyChanged("DeadlyAim");
+                }
+            }
+        }
+
+        [XmlIgnore]
+        public bool CombatExpertise
+        {
+            get
+            {
+                return _CombatExpertise;
+            }
+            set
+            {
+                if (_CombatExpertise != value)
+                {
+                    _CombatExpertise = value;
+                    NotifyPropertyChanged("CombatExpertise");
+                }
+            }
+        }
+        
 
         [XmlIgnore]
         public List<AttackSet> MeleeAttacks {

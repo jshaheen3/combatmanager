@@ -117,23 +117,52 @@ namespace CombatManager
 
         private static void LoadFeatConditions()
         {
-          
+            Condition c;
+
+            /* Don't want to add everything like the spells are done below. Will just pick out certain feats for now */
+            // + Combat Expertise, Bloody Assault, Dazing Assault, Stunning Assault.
             foreach (Feat f in Feat.Feats)
             {
-                /* Start with Power Attack for now */
-                if (f.Name != "Power Attack")
-                    continue;
+                switch (f.Name)
+                {
+                    case "Power Attack":
+                        c = new Condition();
+                        c.Image = "sword-single";
+                        c.Bonus = new ConditionBonus();
+                        c.Bonus.PowerAttack = true;
+                        break;
 
-                Condition c = new Condition();
+                    case "Deadly Aim":
+                        c = new Condition();
+                        c.Image = "bow";
+                        c.Bonus = new ConditionBonus();
+                        c.Bonus.DeadlyAim = true;
+                        break;
+
+                    case "Combat Expertise":
+                        c = new Condition();
+                        c.Image = "shield";
+                        c.Bonus = new ConditionBonus();
+                        c.Bonus.CombatExpertise = true;
+                        break;
+
+                    case "Bloody Assault":
+                    case "Dazing Assault":
+                    case "Stunning Assault":
+                        c = new Condition();
+                        c.Image = "sword";
+                        c.Bonus = new ConditionBonus();
+                        c.Bonus.MeleeAttack = -5;
+                        c.Bonus.CMB = -5;
+                        break;
+                        
+                    default:
+                        continue;
+                }
                 c.Name = f.Name;
-                c.Image = "sword-single";
                 c.Feat = f;
                 c.Text = f.Benefit;
-                c.Bonus = new ConditionBonus();
-                c.Bonus.PowerAttack = true;
-
                 Conditions.Add(c);
-
             }
         }
         
