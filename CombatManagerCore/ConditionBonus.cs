@@ -72,7 +72,7 @@ namespace CombatManager
         private bool _PowerAttack;
         private bool _DeadlyAim;
         private bool _CombatExpertise;
-
+        
 
 
         public ConditionBonus()
@@ -592,7 +592,7 @@ namespace CombatManager
                 }
             }
         }
-
+        
         public bool StrZero
         {
             get { return _StrZero; }

@@ -144,8 +144,18 @@ namespace CombatManager
                         c.Image = "shield";
                         c.Bonus = new ConditionBonus();
                         c.Bonus.CombatExpertise = true;
-                        break; 
+                        break;
 
+                    case "Bloody Assault":
+                    case "Dazing Assault":
+                    case "Stunning Assault":
+                        c = new Condition();
+                        c.Image = "sword";
+                        c.Bonus = new ConditionBonus();
+                        c.Bonus.MeleeAttack = -5;
+                        c.Bonus.CMB = -5;
+                        break;
+                        
                     default:
                         continue;
                 }

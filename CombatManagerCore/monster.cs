@@ -391,7 +391,7 @@ namespace CombatManager {
         private bool _PowerAttack;
         private bool _DeadlyAim;
         private bool _CombatExpertise;
-
+        
         private int _DBLoaderID;
 
         private int _DetailsID;
@@ -7561,6 +7561,7 @@ namespace CombatManager {
                 }
             }
         }
+        
 
         [XmlIgnore]
         public List<AttackSet> MeleeAttacks {
