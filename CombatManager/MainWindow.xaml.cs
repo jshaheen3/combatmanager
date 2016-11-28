@@ -8385,6 +8385,19 @@ namespace CombatManager
                 case "YellowColorMenuItem":
                     color = (uint)System.Drawing.Color.Yellow.ToArgb();
                     break;
+                case "GrayColorMenuItem":
+                    color = (uint)System.Drawing.Color.Gray.ToArgb();
+                    break;
+                case "PinkColorMenuItem":
+                    color = (uint)System.Drawing.Color.HotPink.ToArgb();
+                    break;
+                case "PurpleColorMenuItem":
+                    color = (uint)System.Drawing.Color.Purple.ToArgb();
+                    break;
+                case "OrangeColorMenuItem":
+                    color = (uint)System.Drawing.Color.Orange.ToArgb();
+                    break;
+
             }
 
 
