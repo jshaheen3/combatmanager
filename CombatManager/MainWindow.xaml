@@ -231,11 +231,51 @@
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem Header="Color">
-                <MenuItem Header="None" x:Name="NoColorMenuItem"   Click="ColorMenuItem_Click"/>
-                <MenuItem Header="Red"  x:Name="RedColorMenuItem"  Click="ColorMenuItem_Click"/>
-                <MenuItem Header="Blue" x:Name="BlueColorMenuItem" Click="ColorMenuItem_Click"/>
-                <MenuItem Header="Green" x:Name="GreenColorMenuItem" Click="ColorMenuItem_Click"/>
-                <MenuItem Header="Yellow" x:Name="YellowColorMenuItem" Click="ColorMenuItem_Click"/>
+                <MenuItem Header="None" x:Name="NoColorMenuItem"   Click="ColorMenuItem_Click">
+                    <MenuItem.Icon>
+                        <Path Data="M0,0 L9,0 L9,9 L0,9 z" HorizontalAlignment="Center" StrokeStartLineCap="Round" Stretch="Fill" StrokeEndLineCap="Round" Width="15" Height="15" Stroke="Black" Fill="White"></Path>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Blue" x:Name="BlueColorMenuItem" Click="ColorMenuItem_Click">
+                    <MenuItem.Icon>
+                        <Path Data="M0,0 L9,0 L9,9 L0,9 z" HorizontalAlignment="Center" StrokeStartLineCap="Round" Stretch="Fill" StrokeEndLineCap="Round" Width="15" Height="15" Stroke="Black" Fill="CornflowerBlue"></Path>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Green" x:Name="GreenColorMenuItem" Click="ColorMenuItem_Click">
+                    <MenuItem.Icon>
+                        <Path Data="M0,0 L9,0 L9,9 L0,9 z" HorizontalAlignment="Center" StrokeStartLineCap="Round" Stretch="Fill" StrokeEndLineCap="Round" Width="15" Height="15" Stroke="Black" Fill="LightGreen"></Path>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Red"  x:Name="RedColorMenuItem"  Click="ColorMenuItem_Click">
+                <MenuItem.Icon>
+                    <Path Data="M0,0 L9,0 L9,9 L0,9 z" HorizontalAlignment="Center" StrokeStartLineCap="Round" Stretch="Fill" StrokeEndLineCap="Round" Width="15" Height="15" Stroke="Black" Fill="Red"></Path>
+                </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Yellow" x:Name="YellowColorMenuItem" Click="ColorMenuItem_Click">
+                    <MenuItem.Icon>
+                        <Path Data="M0,0 L9,0 L9,9 L0,9 z" HorizontalAlignment="Center" StrokeStartLineCap="Round" Stretch="Fill" StrokeEndLineCap="Round" Width="15" Height="15" Stroke="Black" Fill="Yellow"></Path>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Gray" x:Name="GrayColorMenuItem" Click="ColorMenuItem_Click">
+                    <MenuItem.Icon>
+                        <Path Data="M0,0 L9,0 L9,9 L0,9 z" HorizontalAlignment="Center" StrokeStartLineCap="Round" Stretch="Fill" StrokeEndLineCap="Round" Width="15" Height="15" Stroke="Black" Fill="Gray"></Path>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Pink" x:Name="PinkColorMenuItem" Click="ColorMenuItem_Click">
+                    <MenuItem.Icon>
+                        <Path Data="M0,0 L9,0 L9,9 L0,9 z" HorizontalAlignment="Center" StrokeStartLineCap="Round" Stretch="Fill" StrokeEndLineCap="Round" Width="15" Height="15" Stroke="Black" Fill="HotPink"></Path>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Purple" x:Name="PurpleColorMenuItem" Click="ColorMenuItem_Click">
+                    <MenuItem.Icon>
+                        <Path Data="M0,0 L9,0 L9,9 L0,9 z" HorizontalAlignment="Center" StrokeStartLineCap="Round" Stretch="Fill" StrokeEndLineCap="Round" Width="15" Height="15" Stroke="Black" Fill="Purple"></Path>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Orange" x:Name="OrangeColorMenuItem" Click="ColorMenuItem_Click">
+                    <MenuItem.Icon>
+                        <Path Data="M0,0 L9,0 L9,9 L0,9 z" HorizontalAlignment="Center" StrokeStartLineCap="Round" Stretch="Fill" StrokeEndLineCap="Round" Width="15" Height="15" Stroke="Black" Fill="Orange"></Path>
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
             <Separator/>
             <MenuItem Header="Roll">
