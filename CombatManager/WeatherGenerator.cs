@@ -149,7 +149,7 @@ namespace CombatManager
                     wb.AddBoldBlock("Hurricane");
                     wind = rnd.Next(75, 174 + 1);
                     wb.AddTempWind(high, low, wind);
-                    wb.AddBlock("Hurricanes can last for up to a week, but their major impact on characters comes in a 24 - to - 48 - hour period when the center of the storm moves through their area.");
+                    wb.AddBlock("Hurricanes can last for up to a week, but their major impact on characters comes in a 24 to 48 hour period when the center of the storm moves through their area.");
                     wb.AddBlock("In addition to very high winds and heavy rain, hurricanes are accompanied by floods. Most adventuring activity is impossible under such conditions.\n");
                     wb.AddBlock("The heavy rain reduces visibility ranges by three-quarters, resulting in a –8 penalty on perception checks. ");
                     WindHurricane();
@@ -292,7 +292,7 @@ namespace CombatManager
             int hail = rnd.Next(1, 20 + 1);
             string txt = "";
             txt += "Precipitation: ";
-            txt += time + ((time == 1) ? "hour" : "hours") + " of rain with " + hail + ((hail == 1) ? "minute" : "minutes") + " of hail.\n\n";
+            txt += time + ((time == 1) ? " hour" : " hours") + " of rain with " + hail + ((hail == 1) ? " minute" : " minutes") + " of hail.\n\n";
             txt += "Hail does not reduce visibility, but the sound of falling hail makes sound-based perception checks more difficult (–4 penalty). ";
             int chance = rnd.Next(1, 100 + 1);
             if (chance <= 5)
@@ -488,7 +488,9 @@ namespace CombatManager
             string txt = "";
             txt += "Heavy thunderstorm in the area with a tornado that lasts " + time + " minutes.\n";
             wb.AddBlock(txt);
-            wb.AddBlock("Tornado (CR 10): All flames are extinguished. All ranged attacks are impossible (even with siege weapons), as are sound-based perception checks. Instead of being blown away, characters in close proximity to a tornado who fail their Fortitude saves are sucked toward the tornado. Those who come in contact with the actual funnel cloud are picked up and whirled around for 1d10 rounds, taking 6d6 points of damage per round, before being violently expelled (falling damage might apply). While a tornado's rotational speed can be as great as 300 mph, the funnel itself moves forward at an average of 30 mph (roughly 250 feet per round). A tornado uproots trees, destroys buildings, and causes similar forms of major destruction.");
+            wb.AddBlock("Tornado (CR 10): All flames are extinguished. All ranged attacks are impossible (even with siege weapons), as are sound-based perception checks. Instead of being blown away, characters in close proximity to a tornado who fail their Fortitude saves are sucked toward the tornado. " +
+                "Those who come in contact with the actual funnel cloud are picked up and whirled around for 1d10 rounds, taking 6d6 points of damage per round, before being violently expelled (falling damage might apply). While a tornado's rotational speed can be as great as 300 mph, " + 
+                "the funnel itself moves forward at an average of 30 mph (roughly 250 feet per round). A tornado uproots trees, destroys buildings, and causes similar forms of major destruction.");
         }
 
         private void WindCheckedSize(string chk, string blownaway, int flyPenalty)
@@ -601,7 +603,6 @@ namespace CombatManager
         private class WeatherBlockCreator : BlockCreator
         {
             /* Inner class to write text to the document area */
-
             private List<Block> blocks;
             private LinkHander _LinkHandler;        
                
@@ -664,7 +665,7 @@ namespace CombatManager
                 string[] split = txt.Split(' ');
                 foreach (string str in split)
                 {
-                    if (words.Any(str.ToLower().Contains))
+                    if (words.Any(str.ToLower().Equals))
                     {
                         foreach (string word in words)
                         {

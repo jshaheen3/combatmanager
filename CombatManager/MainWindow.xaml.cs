@@ -8100,7 +8100,6 @@ namespace CombatManager
         {
             if (UserSettings.Settings.ShowExtraTabs)
             {
-                WeatherTab.Visibility = Visibility.Visible;
                 CalendarTab.Visibility = Visibility.Visible;
             }
         }
@@ -8425,6 +8424,7 @@ namespace CombatManager
             NameTypeFilterComboBox.SelectedIndex = 0;
             NameSecondFilterComboBox.SelectedIndex = 0;
             NameTextBlock.Text = "";
+            NameHistoryTextBlock.Text = "";
         }
 
         private void NameTypeFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -8439,18 +8439,23 @@ namespace CombatManager
 
         private void NameSecondFilterComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
             NameTextBlock.Text = "";
         }
 
         private void NameGenerate_Click(object sender, RoutedEventArgs e)
         {
             NameTextBlock.Text = nameGenerator.Update(NameTypeFilterComboBox.SelectedIndex, NameSecondFilterComboBox.SelectedIndex);
+            NameHistoryTextBlock.Text = NameTextBlock.Text + "\n" + NameHistoryTextBlock.Text;
+            if (NameHistoryTextBlock.Text.Length > 1000)
+            {
+                NameHistoryTextBlock.Text = NameHistoryTextBlock.Text.Substring(0, 1000);
+            }
         }
 
         private void NamePrintButton_Click(object sender, RoutedEventArgs e)
         {
             NameFlowDocument.Print();
+            // Maybe print history list
         }
 
         #endregion
