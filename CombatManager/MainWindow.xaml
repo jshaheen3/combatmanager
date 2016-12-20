@@ -3843,47 +3843,114 @@
                 </Grid>
             </TabItem>
 
-            <TabItem x:Name="NamesTab" IsSelected="True">
+            <TabItem x:Name="RandomGeneratorTab" IsSelected="True">
                 <TabItem.Header>
                     <StackPanel Orientation="Horizontal">
-                        <Image Width="16" Height="16" Source="Images\book-16.png" />
-                        <TextBlock Text="Name Generator" Margin="5,0,0,0" />
+                        <Image Width="16" Height="16" Source="Images\d20p-16.png" />
+                        <TextBlock Text="Random" Margin="5,0,0,0" />
                     </StackPanel>
                 </TabItem.Header>
-                <Grid x:Name="NamesTabGrid">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition/>
-                        <RowDefinition Height="Auto" MinHeight="32"/>
-                        <RowDefinition Height="6"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="185"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Rectangle Fill="{DynamicResource DarkBackgroundBrush}" Margin="1,0,0,0" RadiusY="5" RadiusX="5" Grid.RowSpan="5" Stroke="White" StrokeThickness="0" Grid.ColumnSpan="2"/>
-                    <Button x:Name="ResetNameFilterButton" Grid.Column="1" HorizontalAlignment="Left" Margin="8,4,0,0" VerticalAlignment="Top" Click="ResetNameFilterButton_Click">
-                        <Image Height="16" Source="Images/reset-16.png" Stretch="Fill" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                    </Button>
-                    <ComboBox x:Name="NameTypeFilterComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="34,4,0,4"  d:LayoutOverrides="Height" SelectionChanged="NameTypeFilterComboBox_SelectionChanged" Width="173" />
-                    <ComboBox x:Name="NameSecondFilterComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="211,4,0,4" d:LayoutOverrides="Height" SelectionChanged="NameSecondFilterComboBox_SelectionChanged" Width="131"/>
+                <Grid>
+                    <TabControl TabStripPlacement="Left" Background="{x:Null}" ItemContainerStyle="{DynamicResource TabItemStyle3}" x:Name="NameHorTabControl">
+                        <TabItem x:Name="Names">
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Names " Margin="0,0,5,0" />
+                                    <Image Width="16" Height="16" Source="Images\book-16.png" />
+                                </StackPanel>
+                            </TabItem.Header>
+                            <Grid x:Name="NamesTabGrid">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition/>
+                                    <RowDefinition Height="Auto" MinHeight="32"/>
+                                    <RowDefinition Height="6"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="185"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Rectangle Fill="{DynamicResource DarkBackgroundBrush}" Margin="1,0,0,0" RadiusY="5" RadiusX="5" Grid.RowSpan="5" Stroke="White" StrokeThickness="0" Grid.ColumnSpan="2"/>
+                                <Button x:Name="ResetNameFilterButton" Grid.Column="1" HorizontalAlignment="Left" Margin="0,4,0,0" VerticalAlignment="Top" Click="ResetNameFilterButton_Click">
+                                    <Image Height="16" Source="Images/reset-16.png" Stretch="Fill" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </Button>
+                                <ComboBox x:Name="NameTypeFilterComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="34,4,0,4"  d:LayoutOverrides="Height" SelectionChanged="NameTypeFilterComboBox_SelectionChanged" Width="173" />
+                                <ComboBox x:Name="NameSecondFilterComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="211,4,0,4" d:LayoutOverrides="Height" SelectionChanged="NameSecondFilterComboBox_SelectionChanged" Width="131"/>
 
-                    <Button x:Name="NameGenerate" Grid.Column="1" HorizontalAlignment="Left" Margin="350,4,0,0" VerticalAlignment="Top" Click="NameGenerate_Click">
-                        <Image Height="16" Source="Images/book-16.png" Stretch="Fill" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                    </Button>
+                                <Button x:Name="NameGenerate" Grid.Column="1" HorizontalAlignment="Left" Margin="350,4,0,0" VerticalAlignment="Top" Click="NameGenerate_Click">
+                                    <Image Height="16" Source="Images/book-16.png" Stretch="Fill" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </Button>
 
-                    <Button x:Name="NamePrintButton" Grid.Column="1" HorizontalAlignment="Right" Margin="0,4,4.25,4" d:LayoutOverrides="Height" Click="NamePrintButton_Click">
-                        <Image Height="16" Source="Images/PrintHS.png" Stretch="Fill" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                    </Button>
+                                <Button x:Name="NamePrintButton" Grid.Column="1" HorizontalAlignment="Right" Margin="0,4,4.25,4" d:LayoutOverrides="Height" Click="NamePrintButton_Click">
+                                    <Image Height="16" Source="Images/PrintHS.png" Stretch="Fill" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </Button>
+                                <FlowDocumentScrollViewer x:Name="NameHistoryFlowDocument" Grid.Column="0" Background="White" Grid.RowSpan="4" Grid.Row="1" Foreground="Black">
+                                    <FlowDocument Background="White" FontFamily="/CombatManager;component/Fonts/#Segoe UI" TextAlignment="Left">
+                                        <Paragraph x:Name="NameHistoryParagraph">
+                                            <TextBlock x:Name="NameHistoryTextBlock"/>
+                                        </Paragraph>
+                                    </FlowDocument>
+                                </FlowDocumentScrollViewer>
+                                <FlowDocumentScrollViewer x:Name="NameFlowDocument" Grid.Column="1" Margin="1,32.96,1,8" Background="White" VerticalScrollBarVisibility="Disabled" Grid.RowSpan="4" Grid.Row="0" Foreground="Black">
+                                    <FlowDocument Background="White" FontFamily="/CombatManager;component/Fonts/#Segoe UI" TextAlignment="Left">
+                                        <Paragraph x:Name="NameParagraph">
+                                            <TextBlock x:Name="NameTextBlock"/>
+                                        </Paragraph>
+                                    </FlowDocument>
+                                </FlowDocumentScrollViewer>
 
-                    <FlowDocumentScrollViewer x:Name="NameFlowDocument" Grid.Column="1" Margin="1,32.96,1,8" Background="White" VerticalScrollBarVisibility="Disabled" Grid.RowSpan="4" Grid.Row="0" Foreground="Black">
-                        <FlowDocument Background="White" FontFamily="/CombatManager;component/Fonts/#Segoe UI" TextAlignment="Left">
-                            <Paragraph x:Name="NameParagraph">
-                                <TextBlock x:Name="NameTextBlock"/>
-                            </Paragraph>
-                        </FlowDocument>
-                    </FlowDocumentScrollViewer>
+                            </Grid>
+                        </TabItem>
+                        <TabItem x:Name="Weather">
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Weather" Margin="0,0,5,0" />
+                                    <Image Width="16" Height="16" Source="Images\lightning-16.png" />
+                                </StackPanel>
+                            </TabItem.Header>
+                            <Grid x:Name="WeatherTabGrid">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="30" />
+                                    <RowDefinition/>
+                                    <RowDefinition Height="Auto" MinHeight="32"/>
+                                    <RowDefinition Height="6"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="185" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
 
+                                <Button x:Name="ResetWeatherButton" Grid.Column="1" HorizontalAlignment="Left" Margin="0,4,0,0" VerticalAlignment="Top" Click="ResetWeather_Click">
+                                    <Image Height="16" Source="Images/reset-16.png" Stretch="Fill" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </Button>
+                                <ComboBox x:Name="WeatherClimateFilterComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="24,4,0,4"  d:LayoutOverrides="Height" SelectionChanged="WeatherClimateFilterComboBox_SelectionChanged" Width="173" />
+                                <ComboBox x:Name="WeatherSeasonFilterComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="200,4,0,4" d:LayoutOverrides="Height" SelectionChanged="WeatherSeasonFilterComboBox_SelectionChanged" Width="131"/>
+
+                                <Button x:Name="WeatherGenerate" Grid.Column="1" HorizontalAlignment="Left" Margin="350,4,0,0" VerticalAlignment="Top" Click="WeatherGenerate_Click">
+                                    <Image Height="16" Source="Images/lightning-16.png" Stretch="Fill" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </Button>
+
+                                <Button x:Name="WeatherPrintButton" Grid.Column="1" HorizontalAlignment="Right" Margin="0,4,4,4" d:LayoutOverrides="Height" Click="WeatherPrintButton_Click">
+                                    <Image Height="16" Source="Images/PrintHS.png" Stretch="Fill" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </Button>
+
+                                <FlowDocumentScrollViewer x:Name="WeatherFlowDocument" Grid.Column="1" Margin="1,33,1,8" Background="White" VerticalScrollBarVisibility="Disabled" Grid.RowSpan="4" Grid.Row="0" Foreground="Black">
+                                    <FlowDocument Background="White" FontFamily="/CombatManager;component/Fonts/#Segoe UI" TextAlignment="Left"/>
+                                </FlowDocumentScrollViewer>
+
+                            </Grid>
+                        </TabItem>
+                        <TabItem>
+                            <TabItem.Header>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Empty" Margin="0,0,5,0" />
+                                    <Image Width="16" Height="16" Source="Images\bell-16.png" />
+                                </StackPanel>
+                            </TabItem.Header>
+                            <Grid></Grid>
+                            
+                        </TabItem>
+                    </TabControl>
                 </Grid>
             </TabItem>
 
@@ -3962,47 +4029,6 @@
                         <Button x:Name="GoToCurrentDate" Content="Go to Current Date" HorizontalAlignment="Left" Margin="8,180,0,0" Grid.Row="1" VerticalAlignment="Top" Width="173" Click="GoToCurrentDate_Click"/>
                     </Grid>
                 </Border>
-            </TabItem>
-            <TabItem x:Name="WeatherTab" Visibility="Hidden">
-                <TabItem.Header>
-                    <StackPanel Orientation="Horizontal">
-                        <Image Width="16" Height="16" Source="Images\lightning-16.png" />
-                        <TextBlock Text="Weather Generator" Margin="5,0,0,0" />
-                       
-                    </StackPanel>
-                </TabItem.Header>
-                <Grid x:Name="WeatherTabGrid">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="30" />
-                        <RowDefinition/>
-                        <RowDefinition Height="Auto" MinHeight="32"/>
-                        <RowDefinition Height="6"/>
-                        
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="185" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    
-                    <Button x:Name="ResetWeatherButton" Grid.Column="1" HorizontalAlignment="Left" Margin="0,4,0,0" VerticalAlignment="Top" Click="ResetWeather_Click">
-                        <Image Height="16" Source="Images/reset-16.png" Stretch="Fill" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                    </Button>
-                    <ComboBox x:Name="WeatherClimateFilterComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="24,4,0,4"  d:LayoutOverrides="Height" SelectionChanged="WeatherClimateFilterComboBox_SelectionChanged" Width="173" />
-                    <ComboBox x:Name="WeatherSeasonFilterComboBox" Grid.Column="1" HorizontalAlignment="Left" Margin="200,4,0,4" d:LayoutOverrides="Height" SelectionChanged="WeatherSeasonFilterComboBox_SelectionChanged" Width="131"/>
-
-                    <Button x:Name="WeatherGenerate" Grid.Column="1" HorizontalAlignment="Left" Margin="350,4,0,0" VerticalAlignment="Top" Click="WeatherGenerate_Click">
-                        <Image Height="16" Source="Images/lightning-16.png" Stretch="Fill" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                    </Button>
-
-                    <Button x:Name="WeatherPrintButton" Grid.Column="1" HorizontalAlignment="Right" Margin="0,4,4,4" d:LayoutOverrides="Height" Click="WeatherPrintButton_Click">
-                        <Image Height="16" Source="Images/PrintHS.png" Stretch="Fill" Width="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                    </Button>
-
-                    <FlowDocumentScrollViewer x:Name="WeatherFlowDocument" Grid.Column="1" Margin="1,33,1,8" Background="White" VerticalScrollBarVisibility="Disabled" Grid.RowSpan="4" Grid.Row="0" Foreground="Black">
-                        <FlowDocument Background="White" FontFamily="/CombatManager;component/Fonts/#Segoe UI" TextAlignment="Left"/>
-                    </FlowDocumentScrollViewer>
-
-                </Grid>
             </TabItem>
         </TabControl>
         <Button x:Name="OGL_Button" Content="OGL" HorizontalAlignment="Left" Margin="15,4,0,8.168" Grid.Row="2" d:LayoutOverrides="Height" Width="30" Click="OGL_Button_Click" Style="{DynamicResource ButtonMainStyle}" FontSize="10.667"/>
