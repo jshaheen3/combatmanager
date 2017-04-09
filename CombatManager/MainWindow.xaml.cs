@@ -8372,6 +8372,9 @@ namespace CombatManager
 
             switch (mi.Name)
             {
+                case "TanColorMenuItem":
+                    color = (uint)System.Drawing.Color.Tan.ToArgb();
+                    break;
                 case "RedColorMenuItem":
                     color = (uint)System.Drawing.Color.Red.ToArgb();
                     break;
